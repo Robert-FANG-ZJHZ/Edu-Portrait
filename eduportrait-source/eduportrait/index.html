@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>山海智绘 · 课程数字画像 | 数字画像赋能"教-学-评"一体化</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b6cb0'/%3E%3Ctext x='16' y='22' font-size='15' font-weight='700' fill='%23fff' text-anchor='middle' font-family='sans-serif'%3EEP%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="logo">EP</div>
+    <div>
+      <h1>课程数字画像 <span class="ver">EduPortrait v1.0</span></h1>
+      <p class="sub">数字画像赋能"教-学-评"一体化 · 以「课」为最小循环单元 · 课程预备阶段可实操工具</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <span class="badge" id="lessonBadge">—</span>
+    <button class="btn primary" id="btnRun">运行分析</button>
+    <button class="btn" id="btnReset">载入示例数据</button>
+    <button class="btn" id="btnExport">导出画像 JSON</button>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="framework">框架设想</button>
+  <button class="tab" data-tab="collect">① 采集</button>
+  <button class="tab" data-tab="analysis">② 分析</button>
+  <button class="tab" data-tab="viz">③ 可视化面板</button>
+  <button class="tab" data-tab="stages">课中 · 课后</button>
+  <button class="tab" data-tab="comp">三阶段综合</button>
+  <button class="tab" data-tab="about">算法与说明</button>
+</nav>
+
+<main>
+<!-- ==================================================== 框架设想 -->
+<section class="panel active" id="panel-framework">
+  <div class="card">
+    <h2>以「课」为最小循环单元的动态闭环</h2>
+    <p class="lead">课程数字画像 = <b>教师数字画像</b> + <b>学生数字画像</b>。数据采集、分析、可视化贯穿
+      <b>课程预备 → 课堂教学 → 课程延伸</b> 三阶段，评价结果回流下一课设计。</p>
+    <div class="loop">
+      <div class="loop-stage">
+        <div class="loop-hd s1">① 课程预备 · 锚定教学起点</div>
+        <div class="loop-body">
+          <p><b>采集</b>：教案设计、支持文献、预习案、课程幻灯片；预习案作答、学习兴趣量表、自主困惑</p>
+          <p><b>分析</b>：TF-IDF 余弦相似度、主题模型、CTT、IRT、K-Means</p>
+          <p><b>可视化</b>：克利夫兰点图、困惑热力图、错因堆叠条、兴趣水平条、掌握概率棒棒糖图</p>
+        </div>
+      </div>
+      <div class="loop-arrow">▶</div>
+      <div class="loop-stage">
+        <div class="loop-hd s2">② 课堂教学 · 捕捉过程证据</div>
+        <div class="loop-body">
+          <p><b>采集</b>：摄像头 + 麦克风阵列 → 语音识别、行为分析；师生/生生互动、答题正确率与速率</p>
+          <p><b>分析</b>：改进版 FIAS 三维编码 10×10 矩阵、社会网络分析、多模态数据融合</p>
+          <p><b>可视化</b>：互动时序图、FIAS 矩阵热力图、比率环形图、互动网络拓扑、行动轨迹线路图</p>
+        </div>
+      </div>
+      <div class="loop-arrow">▶</div>
+      <div class="loop-stage">
+        <div class="loop-hd s3">③ 课程延伸 · 诊断学习成效</div>
+        <div class="loop-body">
+          <p><b>采集</b>：智慧批改（练习质量、错题订正、拓展任务）、练习设计内容、教学反思报告、课堂笔记</p>
+          <p><b>分析</b>：文本挖掘 + 情感分析、关联规则挖掘、知识追踪、笔记结构化程度评估</p>
+          <p><b>可视化</b>：掌握率斜率图、棒棒糖图、错题瀑布图、相关矩阵热力图</p>
+        </div>
+      </div>
+    </div>
+    <div class="loop-back">⟲ 诊断结果回流下一课设计：调整教学起点、重难点、提问设计与分组安排；错因结构与知识留存率同步反馈学生</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>教师数字画像（课程预备阶段指标）</h3>
+      <table class="tbl">
+        <thead><tr><th>维度</th><th>观测指标</th><th>计算方法</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="4">教学设计</td><td>课标契合度</td><td>TF-IDF + 余弦相似度，目标↔课标双向最佳匹配</td></tr>
+          <tr><td>知识种类</td><td>教案命中的知识点数 / 知识点总数</td></tr>
+          <tr><td>知识深度</td><td>布鲁姆认知动词层级均值 × 100</td></tr>
+          <tr><td>知识广度 / 分布平衡性</td><td>课标条目覆盖率；知识点词频归一化香农熵</td></tr>
+          <tr><td>内容组织</td><td>重难点环节预计用时占比</td><td>标记为重难点的环节用时 / 总用时</td></tr>
+          <tr><td>素养设计</td><td>多元素养活动覆盖</td><td>素养关键词词典命中类别数</td></tr>
+          <tr><td>主题结构</td><td>教案—课标主题分布</td><td>Collapsed Gibbs LDA（K 可配置）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>学生数字画像（课程预备阶段指标）</h3>
+      <table class="tbl">
+        <thead><tr><th>维度</th><th>观测指标</th><th>计算方法</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3">前置知识</td><td>难度 / 区分度 / 离散度</td><td>CTT：答对率、点二列相关、高低分组 D、标准差</td></tr>
+          <tr><td>知识点掌握概率</td><td>IRT 二参数 Logistic（MML-EM 估 a、b；EAP 估 θ）</td></tr>
+          <tr><td>不合理题项</td><td>区分度 &lt; 0.2、极端难度、负区分</td></tr>
+          <tr><td>学习兴趣</td><td>兴趣主题频次、学习类型</td><td>量表频次统计；K-Means++（k=3）聚类命名</td></tr>
+          <tr><td>知识困惑</td><td>四类困惑频次与严重度</td><td>词典编码（概念/方法/审题/迁移）+ 错题归属知识点</td></tr>
+          <tr><td>适配度</td><td>教学模式 × 学习类型</td><td>规则矩阵加权（阈值可调，教师可人工复核）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>破解"四重困境"的对应关系</h3>
+    <table class="tbl">
+      <thead><tr><th>困境</th><th>画像回应</th><th>本工具中的落点</th></tr></thead>
+      <tbody>
+        <tr><td>适配性</td><td>教案目标与课标、学情双向对齐</td><td>课标契合度 + 适配度报告（采集·教师侧 / 可视化·克利夫兰点图）</td></tr>
+        <tr><td>过程性</td><td>课堂互动与行为被持续记录</td><td>FIAS 时序与矩阵、SNA 拓扑（课中·课后页）</td></tr>
+        <tr><td>精准性</td><td>错因结构与认知偏差可诊断</td><td>四类困惑热力图、错题关联规则、瀑布图</td></tr>
+        <tr><td>链接性</td><td>评价结果即时回流下一课</td><td>三阶段综合页：平行坐标 + 学生—知识矩阵</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================================================== 采集 -->
+<section class="panel" id="panel-collect">
+  <div class="card">
+    <h2>课程预备阶段 · 数据采集工作台</h2>
+    <p class="lead">左右两端同步采集：<b>教师准备材料</b>与<b>学生预习证据</b>。所有数据只在本机浏览器内存中处理，不上传任何服务器。</p>
+
+    <div class="grid2">
+      <div class="card inner">
+        <h3>教师侧采集</h3>
+        <label class="fld"><span>课题 / 学科 / 年级 / 单元</span>
+          <input type="text" id="fTitle" value=""><input type="text" id="fSubject" value="">
+          <input type="text" id="fGrade" value=""><input type="text" id="fUnit" value=""></label>
+        <label class="fld"><span>教学模式（自述，用于适配度计算）</span>
+          <input type="text" id="fMode" value=""></label>
+        <label class="fld"><span>教案设计 / 支持文献 / 幻灯片文本
+          <button class="mini" data-file="fPlan">上传 .txt</button>
+          <input type="file" id="filePlan" accept=".txt,.md" hidden></span>
+          <textarea id="fPlan" rows="12"></textarea></label>
+        <label class="fld"><span>课程标准条目（每行一条，用于契合度比对）</span>
+          <textarea id="fStd" rows="8"></textarea></label>
+        <div class="fld">
+          <span>教学环节与预计用时（勾选 = 重难点环节）</span>
+          <table class="tbl edit" id="segTable">
+            <thead><tr><th>环节名称</th><th>预计用时(分钟)</th><th>重难点</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <button class="mini" id="btnAddSeg">+ 增加环节</button>
+        </div>
+      </div>
+
+      <div class="card inner">
+        <h3>学生侧采集</h3>
+        <label class="fld"><span>题项—知识点映射 CSV（qid, kp, kp_name, lit, main_confusion, text）
+          <button class="mini" data-file="fItems">上传</button>
+          <input type="file" id="fileItems" accept=".csv,.txt" hidden></span>
+          <textarea id="fItems" rows="6"></textarea></label>
+        <label class="fld"><span>预习案作答 CSV（首列 sid，其后每题 0/1；可选 t_Qxx 用时列）
+          <button class="mini" data-file="fResp">上传</button>
+          <input type="file" id="fileResp" accept=".csv,.txt" hidden></span>
+          <textarea id="fResp" rows="6"></textarea></label>
+        <label class="fld"><span>课后练习作答 CSV（结构同上，用于斜率图与知识追踪）
+          <button class="mini" data-file="fPost">上传</button>
+          <input type="file" id="filePost" accept=".csv,.txt" hidden></span>
+          <textarea id="fPost" rows="6"></textarea></label>
+        <label class="fld"><span>学习兴趣量表 CSV（首列 sid，其后各主题 1–5 分 + 行为频次列）
+          <button class="mini" data-file="fInterest">上传</button>
+          <input type="file" id="fileInterest" accept=".csv,.txt" hidden></span>
+          <textarea id="fInterest" rows="6"></textarea></label>
+        <label class="fld"><span>学生自主描述的困惑 CSV（sid, text）
+          <button class="mini" data-file="fConf">上传</button>
+          <input type="file" id="fileConf" accept=".csv,.txt" hidden></span>
+          <textarea id="fConf" rows="6"></textarea></label>
+      </div>
+    </div>
+
+    <div class="card inner">
+      <h3>课堂教学 / 课程延伸数据源（可选，供课中·课后页使用）</h3>
+      <div class="grid2">
+        <label class="fld"><span>FIAS 编码序列（1–10，逗号分隔，每格 3 秒）</span>
+          <textarea id="fFias" rows="3"></textarea></label>
+        <label class="fld"><span>师生互动边表 CSV（from, to, weight）</span>
+          <textarea id="fSns" rows="3"></textarea></label>
+      </div>
+    </div>
+
+    <div class="card inner">
+      <h3>采集完整性核对</h3>
+      <ul class="checklist" id="checklist"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== 分析 -->
+<section class="panel" id="panel-analysis">
+  <div class="card">
+    <h2>分析参数（可调节，实时重算）</h2>
+    <div class="params">
+      <label>四维达标线<input type="number" id="pTarget" value="60" min="0" max="100" step="5"></label>
+      <label>课标覆盖率阈值<input type="number" id="pThr" value="0.25" min="0" max="1" step="0.05"></label>
+      <label>题项区分度下限<input type="number" id="pMinD" value="0.2" min="-1" max="1" step="0.05"></label>
+      <label>LDA 主题数 K<input type="number" id="pK" value="4" min="2" max="8" step="1"></label>
+      <label>聚类数 k<input type="number" id="pCluster" value="3" min="2" max="5" step="1"></label>
+      <label>关联规则 minSup<input type="number" id="pSup" value="0.2" min="0.05" max="1" step="0.05"></label>
+      <label>关联规则 minConf<input type="number" id="pConf" value="0.6" min="0.1" max="1" step="0.05"></label>
+    </div>
+  </div>
+  <div id="analysisOut"><div class="empty">点击右上角「运行分析」开始计算。</div></div>
+</section>
+
+<!-- ==================================================== 可视化 -->
+<section class="panel" id="panel-viz">
+  <div id="vizOut"><div class="empty">请先运行分析。</div></div>
+</section>
+
+<!-- ==================================================== 课中课后 -->
+<section class="panel" id="panel-stages">
+  <div id="stagesOut"><div class="empty">请先运行分析。</div></div>
+</section>
+
+<!-- ==================================================== 综合 -->
+<section class="panel" id="panel-comp">
+  <div id="compOut"><div class="empty">请先运行分析。</div></div>
+</section>
+
+<!-- ==================================================== 说明 -->
+<section class="panel" id="panel-about">
+  <div class="card">
+    <h2>算法实现说明（全部为确定性计算，不含生成式内容）</h2>
+    <table class="tbl">
+      <thead><tr><th>模块</th><th>文件</th><th>方法</th><th>关键参数</th></tr></thead>
+      <tbody>
+        <tr><td>中文分词</td><td>assets/algos/text.js</td><td>CJK 一元 + 二元字组，拉丁词整词；停用词表过滤</td><td>—</td></tr>
+        <tr><td>课标契合度</td><td>text.js</td><td>TF-IDF（1+log tf）× 余弦相似度，双向最佳匹配几何平均</td><td>覆盖阈值 0.12</td></tr>
+        <tr><td>主题模型</td><td>text.js</td><td>Collapsed Gibbs Sampling LDA</td><td>α=0.5 β=0.02 iter=160 固定种子</td></tr>
+        <tr><td>知识深度</td><td>text.js</td><td>布鲁姆六层动词词典，取句中最高层级</td><td>归一化 ×100</td></tr>
+        <tr><td>CTT</td><td>psych.js</td><td>难度 P、点二列区分度、高低 27% 分组 D、标准差</td><td>—</td></tr>
+        <tr><td>IRT 2PL</td><td>psych.js</td><td>Bock-Aitkin MML-EM，数值牛顿法 M 步，EAP 估 θ</td><td>21 节点 θ∈[-4,4]，a∈[0.25,3] b∈[-4,4]</td></tr>
+        <tr><td>K-Means</td><td>cluster.js</td><td>z-score 标准化 + k-means++ 初始化 + 轮廓系数</td><td>k=3，固定种子 42</td></tr>
+        <tr><td>困惑编码</td><td>text.js</td><td>四类关键词词典加权命中；未命中时回退题项预设错因</td><td>教师可人工复核改写</td></tr>
+        <tr><td>关联规则</td><td>rules.js</td><td>Apriori 逐层生成 + 置信度/提升度剪枝</td><td>minSup 0.2 / minConf 0.6</td></tr>
+        <tr><td>知识追踪</td><td>psych.js</td><td>BKT 四参数，坐标下降极大似然</td><td>pInit/pLearn/pGuess/pSlip</td></tr>
+        <tr><td>改进版 FIAS</td><td>interaction.js</td><td>10×10 迁移矩阵 + 提问类型/应答层次/沉默性质三维扩展</td><td>3 秒采样</td></tr>
+        <tr><td>社会网络分析</td><td>interaction.js</td><td>加权度中心度、网络密度、边缘参与者阈值</td><td>中心度 &lt; 0.18</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>数据伦理</h3>
+      <ul class="list">
+        <li>示例数据为<b>模拟生成</b>（tools/gen_sample.py，固定种子），学号匿名化为 S01…S30，不指向任何真实师生。</li>
+        <li>全流程在<b>浏览器本地内存</b>完成，无后端、无网络请求、无数据留存。</li>
+        <li>高敏感数据（人脸、声纹、生物识别）<b>不在本工具采集范围内</b>；课堂影像仅保留结构化编码。</li>
+        <li>画像结果仅供教师教学改进参考，<b>不得用于学生排名、分班或问责</b>。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>轻量化设计（面向基础设施薄弱学校）</h3>
+      <ul class="list">
+        <li>零依赖、零构建：原生 HTML + JS，双击 index.html 即可离线运行。</li>
+        <li>可视化面板以<b>自然语言结论句</b>替代术语，每张图配"怎么读 / 怎么做"提示。</li>
+        <li>教师只需粘贴或上传 CSV，无需编程；关键判断保留人工复核入口。</li>
+        <li>MIT 许可，可自由部署到校园网或离线终端。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>引用与致谢</h3>
+    <p class="lead">本工具为论文《数字画像赋能"教-学-评"一体化的框架设计研究》（方鹏皓、陈子昂、陶憬妍，杭州师范大学）的配套开源实现，
+      系浙江省 2026 年大学生创新创业训练计划项目《山海智绘》（编号 S202610346093）阶段性成果。方法来源：
+      Salton & Buckley (1988) TF-IDF；Jain et al. (1999) K-Means；Flanders (1961) FIAS；Agrawal et al. (1993) Apriori；
+      Blei et al. (2003) LDA；Corbett & Anderson (1994) BKT。</p>
+  </div>
+</section>
+</main>
+
+<footer><span>山海智绘项目组 · 杭州师范大学人文学院</span><span>MIT License · 离线可用 · 数据不出本机</span></footer>
+
+<script src="assets/algos/text.js"></script>
+<script src="assets/algos/psych.js"></script>
+<script src="assets/algos/cluster.js"></script>
+<script src="assets/algos/rules.js"></script>
+<script src="assets/algos/interaction.js"></script>
+<script src="assets/charts.js"></script>
+<script src="assets/pipeline.js"></script>
+<script src="assets/data/sample.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
