@@ -1,0 +1,3131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>山海智绘 · 课程数字画像 | 数字画像赋能"教-学-评"一体化</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b6cb0'/%3E%3Ctext x='16' y='22' font-size='15' font-weight='700' fill='%23fff' text-anchor='middle' font-family='sans-serif'%3EEP%3C/text%3E%3C/svg%3E">
+<style>
+/* =============================================================================
+ * style.css —— 课程数字画像界面样式（零依赖、响应式、浅色学术风）
+ * ========================================================================== */
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1f2933; --sub:#52606d; --muted:#7b8794;
+  --line:#e4e7eb; --blue:#2b6cb0; --blue-l:#ebf4fc; --red:#c53030; --red-l:#fff5f5;
+  --green:#2f855a; --green-l:#f0fff4; --orange:#dd6b20; --purple:#6b46c1;
+  --radius:10px; --shadow:0 1px 2px rgba(16,24,40,.05),0 4px 14px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:14px; line-height:1.65;
+}
+h1,h2,h3{margin:0 0 .5em; font-weight:700; letter-spacing:.2px}
+h1{font-size:19px}
+h2{font-size:17px}
+h3{font-size:14.5px; color:var(--ink)}
+p{margin:.4em 0}
+b{font-weight:700}
+a{color:var(--blue)}
+
+/* ---------------- header ---------------- */
+.top{
+  position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:10px 20px; flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:12px}
+.logo{
+  width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#2b6cb0,#319795);
+  color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px;letter-spacing:-.5px;
+}
+.ver{font-size:11px;font-weight:600;color:var(--blue);background:var(--blue-l);padding:2px 7px;border-radius:20px;vertical-align:2px}
+.sub{margin:0;color:var(--sub);font-size:12.5px}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-size:12px;color:var(--sub);background:#f1f5f9;border:1px solid var(--line);padding:4px 10px;border-radius:20px}
+.btn{
+  border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:8px;
+  padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; transition:.15s;
+}
+.btn:hover{border-color:var(--blue); color:var(--blue)}
+.btn.primary{background:var(--blue); border-color:var(--blue); color:#fff}
+.btn.primary:hover{background:#25598f; color:#fff}
+.btn.mini,button.mini{
+  border:1px solid var(--line); background:#f8fafc; border-radius:6px; padding:2px 8px;
+  font-size:11.5px; cursor:pointer; color:var(--sub); font-weight:600;
+}
+button.mini:hover{border-color:var(--blue); color:var(--blue)}
+
+/* ---------------- tabs ---------------- */
+.tabs{
+  position:sticky; top:59px; z-index:40; background:#fff; border-bottom:1px solid var(--line);
+  display:flex; gap:2px; padding:0 16px; overflow-x:auto;
+}
+.tab{
+  border:none; background:none; padding:11px 15px; font-size:13.5px; font-weight:600;
+  color:var(--muted); cursor:pointer; border-bottom:2.5px solid transparent; white-space:nowrap;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--blue); border-bottom-color:var(--blue)}
+
+/* ---------------- layout ---------------- */
+main{max-width:1400px; margin:0 auto; padding:18px 20px 40px}
+.panel{display:none}
+.panel.active{display:block}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:16px 18px; margin-bottom:16px; box-shadow:var(--shadow);
+}
+.card.inner{margin-bottom:12px; box-shadow:none; background:#fcfdff}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.grid2 .card{margin-bottom:0}
+@media(max-width:1000px){.grid2{grid-template-columns:1fr}}
+.lead{color:var(--sub); font-size:13px; margin-bottom:10px}
+.empty{padding:44px; text-align:center; color:var(--muted); background:#fff; border:1px dashed var(--line); border-radius:var(--radius)}
+
+/* ---------------- framework loop ---------------- */
+.loop{display:flex; align-items:stretch; gap:8px; flex-wrap:wrap; margin:12px 0}
+.loop-stage{flex:1 1 300px; border:1px solid var(--line); border-radius:9px; overflow:hidden; background:#fff}
+.loop-hd{padding:9px 12px; font-weight:700; font-size:13.5px; color:#fff}
+.loop-hd.s1{background:#2b6cb0} .loop-hd.s2{background:#319795} .loop-hd.s3{background:#6b46c1}
+.loop-body{padding:10px 12px; font-size:12.5px; color:var(--sub)}
+.loop-body p{margin:.35em 0}
+.loop-arrow{display:flex; align-items:center; color:var(--muted); font-size:18px}
+.loop-back{
+  margin-top:4px; padding:10px 14px; background:var(--blue-l); border:1px dashed #90cdf4;
+  border-radius:9px; font-size:12.5px; color:#25598f;
+}
+
+/* ---------------- table ---------------- */
+.tbl{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px}
+.tbl th,.tbl td{border:1px solid var(--line); padding:6px 9px; text-align:left; vertical-align:top}
+.tbl thead th{background:#f1f5f9; font-weight:700; color:var(--ink); white-space:nowrap}
+.tbl tbody tr:nth-child(even){background:#fafbfc}
+.tbl.compact td,.tbl.compact th{padding:4px 7px; font-size:12px}
+.tbl td.num,.tbl th.num{text-align:right; font-variant-numeric:tabular-nums}
+.tbl.edit input[type=text],.tbl.edit input[type=number]{width:100%; border:1px solid var(--line); border-radius:5px; padding:3px 6px; font:inherit}
+.tbl.edit td{vertical-align:middle}
+.warn{background:var(--red-l) !important}
+.ok{color:var(--green)} .bad{color:var(--red); font-weight:600}
+.pill{display:inline-block; padding:1px 7px; border-radius:20px; font-size:11px; font-weight:700}
+.pill.red{background:#fed7d7; color:#9b2c2c}
+.pill.green{background:#c6f6d5; color:#22543d}
+.pill.blue{background:#bee3f8; color:#2a4365}
+.pill.gray{background:#e2e8f0; color:#4a5568}
+.pill.orange{background:#feebc8; color:#975a16}
+
+/* ---------------- form ---------------- */
+.fld{display:block; margin-bottom:12px}
+.fld>span{display:block; font-size:12.5px; font-weight:600; color:var(--sub); margin-bottom:4px}
+.fld input[type=text],.fld textarea{
+  width:100%; border:1px solid var(--line); border-radius:7px; padding:7px 9px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; line-height:1.6;
+  background:#fff; color:var(--ink);
+}
+.fld input[type=text]{font-family:inherit; font-size:13px; margin-bottom:4px}
+.fld textarea{resize:vertical}
+.fld input:focus,.fld textarea:focus{outline:2px solid #bee3f8; border-color:var(--blue)}
+.params{display:flex; flex-wrap:wrap; gap:14px}
+.params label{display:flex; flex-direction:column; font-size:12px; color:var(--sub); font-weight:600}
+.params input{width:96px; border:1px solid var(--line); border-radius:6px; padding:4px 7px; font:inherit; margin-top:3px}
+
+/* ---------------- charts ---------------- */
+.chart-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+@media(max-width:1100px){.chart-grid{grid-template-columns:1fr}}
+.chart{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; box-shadow:var(--shadow)}
+.chart.full{grid-column:1 / -1}
+.chart h4{margin:0 0 2px; font-size:14px; font-weight:700}
+.chart .cap{font-size:11.5px; color:var(--muted); margin:0 0 8px}
+.chart .hint{margin-top:8px; padding:8px 10px; background:#f8fafc; border-left:3px solid var(--blue);
+  border-radius:0 6px 6px 0; font-size:12px; color:var(--sub)}
+.chart .hint b{color:var(--ink)}
+.chart svg{display:block; overflow:visible}
+
+/* ---------------- misc ---------------- */
+.kpis{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:14px}
+.kpi{flex:1 1 150px; background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 13px}
+.kpi .k{font-size:11.5px; color:var(--muted); font-weight:600}
+.kpi .v{font-size:22px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
+.kpi .u{font-size:12px; color:var(--sub); font-weight:600}
+.kpi.good .v{color:var(--green)} .kpi.warn .v{color:var(--orange)} .kpi.bad .v{color:var(--red)}
+.checklist{list-style:none; padding:0; margin:0; font-size:12.5px}
+.checklist li{padding:4px 0; border-bottom:1px dashed var(--line)}
+.checklist li:last-child{border:none}
+.list{margin:0; padding-left:18px; font-size:12.5px; color:var(--sub)}
+.list li{margin:.3em 0}
+.conclusion{background:var(--green-l); border:1px solid #c6f6d5; border-radius:8px; padding:10px 12px; font-size:12.5px; color:#22543d; margin-top:10px}
+.conclusion b{color:#1a4731}
+.toast{
+  position:fixed; right:18px; bottom:18px; background:var(--ink); color:#fff; padding:10px 16px;
+  border-radius:8px; font-size:13px; box-shadow:0 8px 24px rgba(0,0,0,.18); z-index:99; opacity:0;
+  transition:.25s; pointer-events:none;
+}
+.toast.show{opacity:1}
+footer{
+  border-top:1px solid var(--line); background:#fff; padding:12px 20px; display:flex;
+  justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--muted);
+}
+.switch{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden; margin-bottom:8px}
+.switch button{border:none; background:#fff; padding:4px 12px; font-size:12px; font-weight:600; cursor:pointer; color:var(--sub)}
+.switch button.on{background:var(--blue); color:#fff}
+.tag{font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:5px; padding:1px 6px; margin-right:5px}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="logo">EP</div>
+    <div>
+      <h1>课程数字画像 <span class="ver">EduPortrait v1.0</span></h1>
+      <p class="sub">数字画像赋能"教-学-评"一体化 · 以「课」为最小循环单元 · 课程预备阶段可实操工具</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <span class="badge" id="lessonBadge">—</span>
+    <button class="btn primary" id="btnRun">运行分析</button>
+    <button class="btn" id="btnReset">载入示例数据</button>
+    <button class="btn" id="btnExport">导出画像 JSON</button>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="framework">框架设想</button>
+  <button class="tab" data-tab="collect">① 采集</button>
+  <button class="tab" data-tab="analysis">② 分析</button>
+  <button class="tab" data-tab="viz">③ 可视化面板</button>
+  <button class="tab" data-tab="stages">课中 · 课后</button>
+  <button class="tab" data-tab="comp">三阶段综合</button>
+  <button class="tab" data-tab="about">算法与说明</button>
+</nav>
+
+<main>
+<!-- ==================================================== 框架设想 -->
+<section class="panel active" id="panel-framework">
+  <div class="card">
+    <h2>以「课」为最小循环单元的动态闭环</h2>
+    <p class="lead">课程数字画像 = <b>教师数字画像</b> + <b>学生数字画像</b>。数据采集、分析、可视化贯穿
+      <b>课程预备 → 课堂教学 → 课程延伸</b> 三阶段，评价结果回流下一课设计。</p>
+    <div class="loop">
+      <div class="loop-stage">
+        <div class="loop-hd s1">① 课程预备 · 锚定教学起点</div>
+        <div class="loop-body">
+          <p><b>采集</b>：教案设计、支持文献、预习案、课程幻灯片；预习案作答、学习兴趣量表、自主困惑</p>
+          <p><b>分析</b>：TF-IDF 余弦相似度、主题模型、CTT、IRT、K-Means</p>
+          <p><b>可视化</b>：克利夫兰点图、困惑热力图、错因堆叠条、兴趣水平条、掌握概率棒棒糖图</p>
+        </div>
+      </div>
+      <div class="loop-arrow">▶</div>
+      <div class="loop-stage">
+        <div class="loop-hd s2">② 课堂教学 · 捕捉过程证据</div>
+        <div class="loop-body">
+          <p><b>采集</b>：摄像头 + 麦克风阵列 → 语音识别、行为分析；师生/生生互动、答题正确率与速率</p>
+          <p><b>分析</b>：改进版 FIAS 三维编码 10×10 矩阵、社会网络分析、多模态数据融合</p>
+          <p><b>可视化</b>：互动时序图、FIAS 矩阵热力图、比率环形图、互动网络拓扑、行动轨迹线路图</p>
+        </div>
+      </div>
+      <div class="loop-arrow">▶</div>
+      <div class="loop-stage">
+        <div class="loop-hd s3">③ 课程延伸 · 诊断学习成效</div>
+        <div class="loop-body">
+          <p><b>采集</b>：智慧批改（练习质量、错题订正、拓展任务）、练习设计内容、教学反思报告、课堂笔记</p>
+          <p><b>分析</b>：文本挖掘 + 情感分析、关联规则挖掘、知识追踪、笔记结构化程度评估</p>
+          <p><b>可视化</b>：掌握率斜率图、棒棒糖图、错题瀑布图、相关矩阵热力图</p>
+        </div>
+      </div>
+    </div>
+    <div class="loop-back">⟲ 诊断结果回流下一课设计：调整教学起点、重难点、提问设计与分组安排；错因结构与知识留存率同步反馈学生</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>教师数字画像（课程预备阶段指标）</h3>
+      <table class="tbl">
+        <thead><tr><th>维度</th><th>观测指标</th><th>计算方法</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="4">教学设计</td><td>课标契合度</td><td>TF-IDF + 余弦相似度，目标↔课标双向最佳匹配</td></tr>
+          <tr><td>知识种类</td><td>教案命中的知识点数 / 知识点总数</td></tr>
+          <tr><td>知识深度</td><td>布鲁姆认知动词层级均值 × 100</td></tr>
+          <tr><td>知识广度 / 分布平衡性</td><td>课标条目覆盖率；知识点词频归一化香农熵</td></tr>
+          <tr><td>内容组织</td><td>重难点环节预计用时占比</td><td>标记为重难点的环节用时 / 总用时</td></tr>
+          <tr><td>素养设计</td><td>多元素养活动覆盖</td><td>素养关键词词典命中类别数</td></tr>
+          <tr><td>主题结构</td><td>教案—课标主题分布</td><td>Collapsed Gibbs LDA（K 可配置）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>学生数字画像（课程预备阶段指标）</h3>
+      <table class="tbl">
+        <thead><tr><th>维度</th><th>观测指标</th><th>计算方法</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3">前置知识</td><td>难度 / 区分度 / 离散度</td><td>CTT：答对率、点二列相关、高低分组 D、标准差</td></tr>
+          <tr><td>知识点掌握概率</td><td>IRT 二参数 Logistic（MML-EM 估 a、b；EAP 估 θ）</td></tr>
+          <tr><td>不合理题项</td><td>区分度 &lt; 0.2、极端难度、负区分</td></tr>
+          <tr><td>学习兴趣</td><td>兴趣主题频次、学习类型</td><td>量表频次统计；K-Means++（k=3）聚类命名</td></tr>
+          <tr><td>知识困惑</td><td>四类困惑频次与严重度</td><td>词典编码（概念/方法/审题/迁移）+ 错题归属知识点</td></tr>
+          <tr><td>适配度</td><td>教学模式 × 学习类型</td><td>规则矩阵加权（阈值可调，教师可人工复核）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>破解"四重困境"的对应关系</h3>
+    <table class="tbl">
+      <thead><tr><th>困境</th><th>画像回应</th><th>本工具中的落点</th></tr></thead>
+      <tbody>
+        <tr><td>适配性</td><td>教案目标与课标、学情双向对齐</td><td>课标契合度 + 适配度报告（采集·教师侧 / 可视化·克利夫兰点图）</td></tr>
+        <tr><td>过程性</td><td>课堂互动与行为被持续记录</td><td>FIAS 时序与矩阵、SNA 拓扑（课中·课后页）</td></tr>
+        <tr><td>精准性</td><td>错因结构与认知偏差可诊断</td><td>四类困惑热力图、错题关联规则、瀑布图</td></tr>
+        <tr><td>链接性</td><td>评价结果即时回流下一课</td><td>三阶段综合页：平行坐标 + 学生—知识矩阵</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================================================== 采集 -->
+<section class="panel" id="panel-collect">
+  <div class="card">
+    <h2>课程预备阶段 · 数据采集工作台</h2>
+    <p class="lead">左右两端同步采集：<b>教师准备材料</b>与<b>学生预习证据</b>。所有数据只在本机浏览器内存中处理，不上传任何服务器。</p>
+
+    <div class="grid2">
+      <div class="card inner">
+        <h3>教师侧采集</h3>
+        <label class="fld"><span>课题 / 学科 / 年级 / 单元</span>
+          <input type="text" id="fTitle" value=""><input type="text" id="fSubject" value="">
+          <input type="text" id="fGrade" value=""><input type="text" id="fUnit" value=""></label>
+        <label class="fld"><span>教学模式（自述，用于适配度计算）</span>
+          <input type="text" id="fMode" value=""></label>
+        <label class="fld"><span>教案设计 / 支持文献 / 幻灯片文本
+          <button class="mini" data-file="fPlan">上传 .txt</button>
+          <input type="file" id="filePlan" accept=".txt,.md" hidden></span>
+          <textarea id="fPlan" rows="12"></textarea></label>
+        <label class="fld"><span>课程标准条目（每行一条，用于契合度比对）</span>
+          <textarea id="fStd" rows="8"></textarea></label>
+        <div class="fld">
+          <span>教学环节与预计用时（勾选 = 重难点环节）</span>
+          <table class="tbl edit" id="segTable">
+            <thead><tr><th>环节名称</th><th>预计用时(分钟)</th><th>重难点</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <button class="mini" id="btnAddSeg">+ 增加环节</button>
+        </div>
+      </div>
+
+      <div class="card inner">
+        <h3>学生侧采集</h3>
+        <label class="fld"><span>题项—知识点映射 CSV（qid, kp, kp_name, lit, main_confusion, text）
+          <button class="mini" data-file="fItems">上传</button>
+          <input type="file" id="fileItems" accept=".csv,.txt" hidden></span>
+          <textarea id="fItems" rows="6"></textarea></label>
+        <label class="fld"><span>预习案作答 CSV（首列 sid，其后每题 0/1；可选 t_Qxx 用时列）
+          <button class="mini" data-file="fResp">上传</button>
+          <input type="file" id="fileResp" accept=".csv,.txt" hidden></span>
+          <textarea id="fResp" rows="6"></textarea></label>
+        <label class="fld"><span>课后练习作答 CSV（结构同上，用于斜率图与知识追踪）
+          <button class="mini" data-file="fPost">上传</button>
+          <input type="file" id="filePost" accept=".csv,.txt" hidden></span>
+          <textarea id="fPost" rows="6"></textarea></label>
+        <label class="fld"><span>学习兴趣量表 CSV（首列 sid，其后各主题 1–5 分 + 行为频次列）
+          <button class="mini" data-file="fInterest">上传</button>
+          <input type="file" id="fileInterest" accept=".csv,.txt" hidden></span>
+          <textarea id="fInterest" rows="6"></textarea></label>
+        <label class="fld"><span>学生自主描述的困惑 CSV（sid, text）
+          <button class="mini" data-file="fConf">上传</button>
+          <input type="file" id="fileConf" accept=".csv,.txt" hidden></span>
+          <textarea id="fConf" rows="6"></textarea></label>
+      </div>
+    </div>
+
+    <div class="card inner">
+      <h3>课堂教学 / 课程延伸数据源（可选，供课中·课后页使用）</h3>
+      <div class="grid2">
+        <label class="fld"><span>FIAS 编码序列（1–10，逗号分隔，每格 3 秒）</span>
+          <textarea id="fFias" rows="3"></textarea></label>
+        <label class="fld"><span>师生互动边表 CSV（from, to, weight）</span>
+          <textarea id="fSns" rows="3"></textarea></label>
+      </div>
+    </div>
+
+    <div class="card inner">
+      <h3>采集完整性核对</h3>
+      <ul class="checklist" id="checklist"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== 分析 -->
+<section class="panel" id="panel-analysis">
+  <div class="card">
+    <h2>分析参数（可调节，实时重算）</h2>
+    <div class="params">
+      <label>四维达标线<input type="number" id="pTarget" value="60" min="0" max="100" step="5"></label>
+      <label>课标覆盖率阈值<input type="number" id="pThr" value="0.25" min="0" max="1" step="0.05"></label>
+      <label>题项区分度下限<input type="number" id="pMinD" value="0.2" min="-1" max="1" step="0.05"></label>
+      <label>LDA 主题数 K<input type="number" id="pK" value="4" min="2" max="8" step="1"></label>
+      <label>聚类数 k<input type="number" id="pCluster" value="3" min="2" max="5" step="1"></label>
+      <label>关联规则 minSup<input type="number" id="pSup" value="0.2" min="0.05" max="1" step="0.05"></label>
+      <label>关联规则 minConf<input type="number" id="pConf" value="0.6" min="0.1" max="1" step="0.05"></label>
+    </div>
+  </div>
+  <div id="analysisOut"><div class="empty">点击右上角「运行分析」开始计算。</div></div>
+</section>
+
+<!-- ==================================================== 可视化 -->
+<section class="panel" id="panel-viz">
+  <div id="vizOut"><div class="empty">请先运行分析。</div></div>
+</section>
+
+<!-- ==================================================== 课中课后 -->
+<section class="panel" id="panel-stages">
+  <div id="stagesOut"><div class="empty">请先运行分析。</div></div>
+</section>
+
+<!-- ==================================================== 综合 -->
+<section class="panel" id="panel-comp">
+  <div id="compOut"><div class="empty">请先运行分析。</div></div>
+</section>
+
+<!-- ==================================================== 说明 -->
+<section class="panel" id="panel-about">
+  <div class="card">
+    <h2>算法实现说明（全部为确定性计算，不含生成式内容）</h2>
+    <table class="tbl">
+      <thead><tr><th>模块</th><th>文件</th><th>方法</th><th>关键参数</th></tr></thead>
+      <tbody>
+        <tr><td>中文分词</td><td>assets/algos/text.js</td><td>CJK 一元 + 二元字组，拉丁词整词；停用词表过滤</td><td>—</td></tr>
+        <tr><td>课标契合度</td><td>text.js</td><td>TF-IDF（1+log tf）× 余弦相似度，双向最佳匹配几何平均</td><td>覆盖阈值 0.12</td></tr>
+        <tr><td>主题模型</td><td>text.js</td><td>Collapsed Gibbs Sampling LDA</td><td>α=0.5 β=0.02 iter=160 固定种子</td></tr>
+        <tr><td>知识深度</td><td>text.js</td><td>布鲁姆六层动词词典，取句中最高层级</td><td>归一化 ×100</td></tr>
+        <tr><td>CTT</td><td>psych.js</td><td>难度 P、点二列区分度、高低 27% 分组 D、标准差</td><td>—</td></tr>
+        <tr><td>IRT 2PL</td><td>psych.js</td><td>Bock-Aitkin MML-EM，数值牛顿法 M 步，EAP 估 θ</td><td>21 节点 θ∈[-4,4]，a∈[0.25,3] b∈[-4,4]</td></tr>
+        <tr><td>K-Means</td><td>cluster.js</td><td>z-score 标准化 + k-means++ 初始化 + 轮廓系数</td><td>k=3，固定种子 42</td></tr>
+        <tr><td>困惑编码</td><td>text.js</td><td>四类关键词词典加权命中；未命中时回退题项预设错因</td><td>教师可人工复核改写</td></tr>
+        <tr><td>关联规则</td><td>rules.js</td><td>Apriori 逐层生成 + 置信度/提升度剪枝</td><td>minSup 0.2 / minConf 0.6</td></tr>
+        <tr><td>知识追踪</td><td>psych.js</td><td>BKT 四参数，坐标下降极大似然</td><td>pInit/pLearn/pGuess/pSlip</td></tr>
+        <tr><td>改进版 FIAS</td><td>interaction.js</td><td>10×10 迁移矩阵 + 提问类型/应答层次/沉默性质三维扩展</td><td>3 秒采样</td></tr>
+        <tr><td>社会网络分析</td><td>interaction.js</td><td>加权度中心度、网络密度、边缘参与者阈值</td><td>中心度 &lt; 0.18</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>数据伦理</h3>
+      <ul class="list">
+        <li>示例数据为<b>模拟生成</b>（tools/gen_sample.py，固定种子），学号匿名化为 S01…S30，不指向任何真实师生。</li>
+        <li>全流程在<b>浏览器本地内存</b>完成，无后端、无网络请求、无数据留存。</li>
+        <li>高敏感数据（人脸、声纹、生物识别）<b>不在本工具采集范围内</b>；课堂影像仅保留结构化编码。</li>
+        <li>画像结果仅供教师教学改进参考，<b>不得用于学生排名、分班或问责</b>。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>轻量化设计（面向基础设施薄弱学校）</h3>
+      <ul class="list">
+        <li>零依赖、零构建：原生 HTML + JS，双击 index.html 即可离线运行。</li>
+        <li>可视化面板以<b>自然语言结论句</b>替代术语，每张图配"怎么读 / 怎么做"提示。</li>
+        <li>教师只需粘贴或上传 CSV，无需编程；关键判断保留人工复核入口。</li>
+        <li>MIT 许可，可自由部署到校园网或离线终端。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>引用与致谢</h3>
+    <p class="lead">本工具为论文《数字画像赋能"教-学-评"一体化的框架设计研究》（方鹏皓、陈子昂、陶憬妍，杭州师范大学）的配套开源实现，
+      系浙江省 2026 年大学生创新创业训练计划项目《山海智绘》（编号 S202610346093）阶段性成果。方法来源：
+      Salton & Buckley (1988) TF-IDF；Jain et al. (1999) K-Means；Flanders (1961) FIAS；Agrawal et al. (1993) Apriori；
+      Blei et al. (2003) LDA；Corbett & Anderson (1994) BKT。</p>
+  </div>
+</section>
+</main>
+
+<footer><span>山海智绘项目组 · 杭州师范大学人文学院</span><span>MIT License · 离线可用 · 数据不出本机</span></footer>
+
+<!-- assets/algos/text.js -->
+<script>
+/* =============================================================================
+ * text.js —— 教师侧文本分析内核（零依赖）
+ *   1. 中文无词典分词：CJK 一元 + 二元字组，拉丁词/数字整词
+ *   2. TF-IDF 向量空间 + 余弦相似度  → 教案目标 × 课标条目 契合度
+ *   3. Collapsed Gibbs LDA 主题模型  → 素养活动主题分布
+ *   4. 布鲁姆认知动词词典            → 知识深度
+ *   5. 素养关键词词典                → 多元素养活动覆盖度
+ *   6. 困惑自述词典编码              → 四类困惑（概念/方法/审题/迁移）
+ * 所有函数均为纯函数，输入确定则输出确定，不含任何随机生成式内容。
+ * ========================================================================== */
+(function (global) {
+  'use strict';
+  var EP = (global.EP = global.EP || {});
+
+  /* ---------------------------------------------------------------- 1. 分词 */
+  var STOP = ('的 了 和 与 或 在 是 有 也 就 都 而 及 其 之 于 以 为 对 把 被 让 使 从 到 由 个 们 这 那 你 我 他 它 并 等 更 最 很 不 无 一个 我们 可以 通过 进行 能够 以及 因此 但是 如果 所以 学生 教师 教学 过程 内容 目标 要求 及其 中的 这种 他们 自己').split(/\s+/);
+  var STOPSET = {};
+  STOP.forEach(function (w) { STOPSET[w] = 1; });
+
+  // 虚词字符：含这些字符的 n-gram 直接丢弃（保留实词组合，显著降低向量噪声）
+  var FUNC = '的了和与是有着也就都而及其之于以为对把被让使从到由能会可并等更最很不但无中个们这那将或且则若如因所、，；：（）()·「」《》0123456789 \t';
+  function hasFunc(s) {
+    for (var i = 0; i < s.length; i++) if (FUNC.indexOf(s[i]) >= 0) return true;
+    return false;
+  }
+
+  function isCJK(ch) {
+    var c = ch.charCodeAt(0);
+    return (c >= 0x4e00 && c <= 0x9fff) || (c >= 0x3400 && c <= 0x4dbf);
+  }
+
+  /** 把一段文本切成 token 数组（CJK 一元+二元，拉丁/数字整词） */
+  function tokenize(text) {
+    text = String(text || '').toLowerCase();
+    var out = [];
+    var buf = '';
+    var i;
+    for (i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (isCJK(ch)) {
+        if (buf) { out.push(buf); buf = ''; }
+        out.push(ch);                                  // 一元
+        if (i + 1 < text.length && isCJK(text[i + 1])) {
+          out.push(ch + text[i + 1]);                  // 二元（顺序敏感）
+        }
+      } else if (/[a-z0-9]/.test(ch)) {
+        buf += ch;
+      } else {
+        if (buf) { out.push(buf); buf = ''; }
+      }
+    }
+    if (buf) out.push(buf);
+    return out.filter(function (t) { return !STOPSET[t] && !hasFunc(t); });
+  }
+
+  /** 从教案文本中抽取教学目标条目（剔除章节标题、空行、标点结尾的短句） */
+  function extractObjectives(plan) {
+    var sents = splitSentences(plan);
+    var out = sents.filter(function (s) {
+      if (s.length < 10) return false;
+      if (/[：:]$/.test(s)) return false;          // "教学目标：" 这类小标题
+      if (/^课题|^教学重点|^教学难点|^教学过程|^教学模式/.test(s)) return false;
+      return true;
+    });
+    // 优先保留编号条目与目标段
+    var numbered = out.filter(function (s) { return /^[0-9①-⑩]/.test(s.replace(/^[一二三四五六七八九十]/, '1')); });
+    return (numbered.length >= 3 ? numbered : out).slice(0, 12);
+  }
+
+  /** 按标点切句 */
+  function splitSentences(text) {
+    return String(text || '')
+      .split(/[\n；;。！？!?\r]+/)
+      .map(function (s) { return s.trim(); })
+      .filter(function (s) { return s.length >= 4; });
+  }
+
+  /* ------------------------------------------------------------ 2. TF-IDF */
+  function buildVocab(docs) {
+    var vocab = {};
+    docs.forEach(function (d) {
+      d.forEach(function (t) {
+        if (!vocab[t]) vocab[t] = { df: 0, id: Object.keys(vocab).length };
+      });
+    });
+    docs.forEach(function (d) {
+      var seen = {};
+      d.forEach(function (t) { if (!seen[t]) { seen[t] = 1; vocab[t].df++; } });
+    });
+    var N = docs.length || 1;
+    Object.keys(vocab).forEach(function (t) {
+      vocab[t].idf = Math.log(1 + N / (1 + vocab[t].df)) + 0.0;
+    });
+    return vocab;
+  }
+
+  function vectorize(tokens, vocab) {
+    var tf = {};
+    tokens.forEach(function (t) { tf[t] = (tf[t] || 0) + 1; });
+    var vec = [];
+    Object.keys(tf).forEach(function (t) {
+      if (!vocab[t]) return;
+      vec.push([vocab[t].id, (1 + Math.log(tf[t])) * vocab[t].idf]);
+    });
+    return vec;
+  }
+
+  function l2norm(vec) {
+    var s = 0;
+    vec.forEach(function (p) { s += p[1] * p[1]; });
+    s = Math.sqrt(s);
+    if (s > 0) vec.forEach(function (p) { p[1] = p[1] / s; });
+    return vec;
+  }
+
+  function cosine(a, b) {
+    var i = 0, j = 0, s = 0;
+    while (i < a.length && j < b.length) {
+      if (a[i][0] === b[j][0]) { s += a[i][1] * b[j][1]; i++; j++; }
+      else if (a[i][0] < b[j][0]) i++;
+      else j++;
+    }
+    return s;
+  }
+
+  /**
+   * 计算「教案目标句」与「课标条目」的语义相似度矩阵
+   * @returns {{matrix:number[][], stdBest:number[], objBest:number[], align:number, pairs:Array}}
+   *   align = 课标契合度（0-100）：双向最佳匹配的加权平均
+   */
+  /**
+   * 教案目标 × 课标条目：余弦相似度矩阵 + IDF 加权词条覆盖率
+   *   相似度  —— TF-IDF 向量的余弦，反映"哪条目标对应哪条课标"（量级 0~1，句级文本天然偏低）
+   *   覆盖率  —— 课标条目中长度≥2 的实词 n-gram，按 IDF 加权后有多少比例出现在教案目标集合中
+   *   契合度  —— 各课标条目覆盖率的均值 ×100（可解释为"教案语言对课标语言的覆盖程度"）
+   * @returns {{matrix,stdBest,objBest,stdCoverage,covered,align,raw,pairs}}
+   */
+  function standardsAlignment(objectives, standards, opts) {
+    opts = opts || {};
+    var threshold = opts.threshold === undefined ? 0.25 : opts.threshold;
+    var objTok = objectives.map(tokenize);
+    var stdTok = standards.map(tokenize);
+    var vocab = buildVocab(objTok.concat(stdTok));
+    var O = objTok.map(function (t) { return l2norm(vectorize(t, vocab)); });
+    var S = stdTok.map(function (t) { return l2norm(vectorize(t, vocab)); });
+    var matrix = O.map(function (o) {
+      return S.map(function (s) { return cosine(o, s); });
+    });
+    var stdBest = S.map(function (_, j) {
+      return matrix.reduce(function (m, row) { return Math.max(m, row[j]); }, 0);
+    });
+    var objBest = matrix.map(function (row) {
+      return row.reduce(function (m, v) { return Math.max(m, v); }, 0);
+    });
+    var pairs = [];
+    matrix.forEach(function (row, i) {
+      var best = 0, bj = -1;
+      row.forEach(function (v, j) { if (v > best) { best = v; bj = j; } });
+      if (bj >= 0) pairs.push({ obj: i, std: bj, sim: best });
+    });
+    // ---- IDF 加权词条覆盖率（只看长度≥2 的实词 n-gram，避免单字虚词虚高）
+    var objSet = {};
+    objTok.forEach(function (d) { d.forEach(function (t) { if (t.length >= 2) objSet[t] = 1; }); });
+    var stdCoverage = stdTok.map(function (d) {
+      var seen = {}, u = [];
+      d.forEach(function (t) { if (t.length >= 2 && !seen[t]) { seen[t] = 1; u.push(t); } });
+      var tot = 0, hit = 0;
+      u.forEach(function (w) { var w2 = vocab[w] ? vocab[w].idf : 0; tot += w2; if (objSet[w]) hit += w2; });
+      return tot > 0 ? hit / tot : 0;
+    });
+    var covered = stdCoverage.filter(function (v) { return v >= threshold; }).length;
+    var mO = mean(objBest), mS = mean(stdBest);
+    // 原始契合度（余弦量级）与契合度指数（0-100，基于词条覆盖率）
+    var raw = Math.sqrt(Math.max(0, mO) * Math.max(0, mS));
+    var align = round(100 * mean(stdCoverage), 1);
+    return {
+      matrix: matrix, stdBest: stdBest, objBest: objBest,
+      stdCoverage: stdCoverage.map(function (v) { return round(v, 4); }),
+      covered: covered, threshold: threshold,
+      raw: round(raw, 4), align: align, pairs: pairs
+    };
+  }
+
+  /**
+   * 知识点覆盖判定：把知识点名切成实词二字片段，只要有一个片段在教案中出现即视为覆盖
+   * @returns {{hit:boolean, count:number, parts:string[]}}
+   */
+  function kpCoverage(planText, kpName) {
+    var parts = [], i;
+    for (i = 0; i + 2 <= kpName.length; i++) {
+      var g = kpName.substr(i, 2);
+      if (!hasFunc(g) && parts.indexOf(g) < 0) parts.push(g);
+    }
+    if (!parts.length) parts = [kpName];
+    var count = 0, hitParts = [];
+    parts.forEach(function (g) {
+      var c = countOccur(planText, g);
+      if (c > 0) { count += c; hitParts.push(g); }
+    });
+    return { hit: hitParts.length > 0, count: count, parts: hitParts };
+  }
+
+  /* --------------------------------------------------------------- 3. LDA */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /**
+   * Collapsed Gibbs Sampling LDA（固定种子，结果可复现）
+   * @param docs token 数组构成的文档集合
+   * @param K 主题数
+   * @returns {{topics:Array, docTopic:number[][], perplexity:number}}
+   */
+  function lda(docs, K, opts) {
+    opts = opts || {};
+    var iters = opts.iters || 220, burn = opts.burn || 60;
+    var alpha = opts.alpha || 0.5, beta = opts.beta || 0.02;
+    var rnd = mulberry32(opts.seed || 20261005);
+    var V = {}, vocab = [];
+    var docWords = docs.map(function (d) {
+      return d.map(function (w) {
+        if (V[w] === undefined) { V[w] = vocab.length; vocab.push(w); }
+        return V[w];
+      });
+    });
+    var nw = [], nd = [], nwsum = [], ndsum = [], z = [];
+    var k, i;
+    for (k = 0; k < K; k++) { nw.push(new Float64Array(vocab.length)); nwsum.push(0); }
+    docWords.forEach(function (ws) {
+      var row = new Float64Array(K), zs = new Int32Array(ws.length);
+      for (i = 0; i < ws.length; i++) {
+        var t = Math.floor(rnd() * K) % K;
+        zs[i] = t; nw[t][ws[i]]++; nwsum[t]++; row[t]++;
+      }
+      nd.push(row); ndsum.push(ws.length); z.push(zs);
+    });
+    var Vlen = vocab.length;
+    for (var it = 0; it < iters; it++) {
+      for (var d = 0; d < docWords.length; d++) {
+        var ws = docWords[d];
+        for (i = 0; i < ws.length; i++) {
+          var w = ws[i], old = z[d][i];
+          nw[old][w]--; nwsum[old]--; nd[d][old]--; ndsum[d]--;
+          var p = new Float64Array(K), sum = 0;
+          for (k = 0; k < K; k++) {
+            p[k] = ((nw[k][w] + beta) / (nwsum[k] + Vlen * beta)) *
+                   ((nd[d][k] + alpha) / (ndsum[d] + K * alpha));
+            sum += p[k];
+          }
+          var u = rnd() * sum, acc = 0, nk = K - 1;
+          for (k = 0; k < K; k++) { acc += p[k]; if (u <= acc) { nk = k; break; } }
+          z[d][i] = nk; nw[nk][w]++; nwsum[nk]++; nd[d][nk]++; ndsum[d]++;
+        }
+      }
+    }
+    // 主题词（按 P(w|k) 降序，过滤停用词与单字噪声优先保留二元词）
+    var topics = [];
+    for (k = 0; k < K; k++) {
+      var arr = [];
+      for (var v = 0; v < Vlen; v++) {
+        arr.push({ w: vocab[v], p: (nw[k][v] + beta) / (nwsum[k] + Vlen * beta) });
+      }
+      arr.sort(function (a, b) { return b.p - a.p; });
+      var picked = [], seenRoot = {};
+      arr.forEach(function (e) {
+        if (picked.length >= 8) return;
+        var root = e.w.length > 1 ? e.w[0] : e.w;
+        if (seenRoot[root] >= 2) return;
+        seenRoot[root] = (seenRoot[root] || 0) + 1;
+        picked.push(e);
+      });
+      topics.push({
+        id: k,
+        weight: round(ndsum.reduce(function (s, _, di) { return s + nd[di][k]; }, 0), 0),
+        top: picked.map(function (e) { return { w: e.w, p: round(e.p * 1000, 2) }; })
+      });
+    }
+    var docTopic = nd.map(function (row) {
+      var s = 0;
+      for (k = 0; k < K; k++) s += row[k];
+      return Array.prototype.map.call(row, function (v) { return round(s ? v / s : 0, 3); });
+    });
+    return { topics: topics, docTopic: docTopic, vocabSize: Vlen, K: K };
+  }
+
+  /* ------------------------------------------------- 4. 布鲁姆认知层级词典 */
+  var BLOOM = [
+    { lv: 1, name: '记忆', words: ['说出', '写出', '记住', '复述', '背诵', '辨认', '指出', '回忆'] },
+    { lv: 2, name: '理解', words: ['说明', '解释', '概括', '举例', '判断', '比较', '理解', '体会', '识别', '区分'] },
+    { lv: 3, name: '应用', words: ['运用', '使用', '计算', '画出', '求解', '求', '列出', '演示', '会用'] },
+    { lv: 4, name: '分析', words: ['分析', '归纳', '推导', '探究', '发现', '比较', '剖析', '拆解'] },
+    { lv: 5, name: '评价', words: ['评价', '质疑', '论证', '检验', '反思', '判断优劣'] },
+    { lv: 6, name: '创造', words: ['设计', '构建', '建立', '建模', '提出', '编制', '创造', '解决', '模型'] }
+  ];
+
+  /** 知识深度：命中动词所在层级（取最高）的均值，归一化到 0-100 */
+  function cognitiveDepth(objectives) {
+    var hits = [];
+    objectives.forEach(function (o) {
+      var best = 0, name = '未标注';
+      BLOOM.forEach(function (g) {
+        g.words.forEach(function (w) {
+          if (o.indexOf(w) >= 0 && g.lv > best) { best = g.lv; name = g.name; }
+        });
+      });
+      hits.push({ text: o, level: best, levelName: name });
+    });
+    var lv = hits.filter(function (h) { return h.level > 0; }).map(function (h) { return h.level; });
+    var score = lv.length ? 100 * mean(lv) / 6 : 0;
+    return { score: round(score, 1), hits: hits, coverage: round(100 * lv.length / (objectives.length || 1), 1) };
+  }
+
+  /* ------------------------------------------------------- 5. 素养词典 */
+  var LITERACY = ['抽象能力', '运算能力', '几何直观', '空间观念', '推理能力',
+    '数据观念', '模型观念', '应用意识', '创新意识', '合作交流', '科学态度',
+    '数形结合', '符号意识', '模型意识'];
+
+  function literacyCoverage(text) {
+    var hit = [];
+    LITERACY.forEach(function (w) {
+      var n = countOccur(text, w);
+      if (n > 0) hit.push({ name: w, count: n });
+    });
+    return { hit: hit, count: hit.length, total: LITERACY.length, score: round(100 * hit.length / 8, 1) };
+  }
+
+  /* ------------------------------------------------- 6. 困惑自述词典编码 */
+  var CONFUSION = [
+    { key: '概念理解不清', words: ['不懂', '不明白', '不清楚', '概念', '定义', '记混', '分不清', '什么意思', '没弄懂', '混淆'] },
+    { key: '方法应用错误', words: ['算错', '步骤', '方法', '不会用', '写反', '出错', '公式', '代入', '不知道先', '总错'] },
+    { key: '审题遗漏', words: ['漏看', '没注意', '看错', '漏了', '条件', '没看全', '答非所问', '审题', '没看到'] },
+    { key: '知识迁移困难', words: ['换个', '情境', '不会了', '联系不起来', '迁移', '变式', '实际', '换说法', '生活中'] }
+  ];
+  var CONF_KEYS = CONFUSION.map(function (c) { return c.key; });
+
+  /** 对一条自述编码：返回各类命中分与首选类别 */
+  function encodeConfusion(text) {
+    var t = String(text || '');
+    var scores = {};
+    CONFUSION.forEach(function (c) {
+      var s = 0;
+      c.words.forEach(function (w) { s += countOccur(t, w) * (w.length >= 3 ? 2 : 1); });
+      scores[c.key] = s;
+    });
+    var top = CONF_KEYS[0], tv = -1;
+    CONF_KEYS.forEach(function (k) { if (scores[k] > tv) { tv = scores[k]; top = k; } });
+    return { scores: scores, primary: tv > 0 ? top : '未编码', strength: tv };
+  }
+
+  /* --------------------------------------------------------------- 工具 */
+  function mean(a) { return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : 0; }
+  function round(x, d) { var p = Math.pow(10, d || 0); return Math.round(x * p) / p; }
+  function countOccur(s, sub) {
+    var n = 0, i = 0;
+    while ((i = s.indexOf(sub, i)) >= 0) { n++; i += sub.length; }
+    return n;
+  }
+
+  EP.text = {
+    tokenize: tokenize, splitSentences: splitSentences,
+    buildVocab: buildVocab, vectorize: vectorize, cosine: cosine,
+    standardsAlignment: standardsAlignment, lda: lda, kpCoverage: kpCoverage,
+    extractObjectives: extractObjectives,
+    cognitiveDepth: cognitiveDepth, literacyCoverage: literacyCoverage,
+    encodeConfusion: encodeConfusion, CONF_KEYS: CONF_KEYS,
+    mean: mean, round: round, countOccur: countOccur, mulberry32: mulberry32
+  };
+})(window);
+
+</script>
+<!-- assets/algos/psych.js -->
+<script>
+/* =============================================================================
+ * psych.js —— 学生侧测量内核（零依赖）
+ *   1. CTT 经典测量理论：难度 P、区分度（点二列相关 / 高低分组法）、离散度
+ *   2. IRT 二参数 Logistic（2PL）：Bock-Aitkin MML-EM 估计 a、b，EAP 估计能力 θ
+ *   3. 知识点掌握概率矩阵、可疑题项识别
+ *   4. BKT 贝叶斯知识追踪：坐标下降极大似然估计 pInit / pLearn / pGuess / pSlip
+ * ========================================================================== */
+(function (global) {
+  'use strict';
+  var EP = (global.EP = global.EP || {});
+  var mean = function (a) { return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : 0; };
+  var round = function (x, d) { var p = Math.pow(10, d === undefined ? 3 : d); return Math.round(x * p) / p; };
+
+  function sd(a) {
+    if (a.length < 2) return 0;
+    var m = mean(a);
+    return Math.sqrt(mean(a.map(function (x) { return (x - m) * (x - m); })));
+  }
+
+  /** 皮尔逊相关 */
+  function corr(x, y) {
+    var mx = mean(x), my = mean(y), sxy = 0, sxx = 0, syy = 0;
+    for (var i = 0; i < x.length; i++) {
+      var a = x[i] - mx, b = y[i] - my;
+      sxy += a * b; sxx += a * a; syy += b * b;
+    }
+    var d = Math.sqrt(sxx * syy);
+    return d > 0 ? sxy / d : 0;
+  }
+
+  /* ------------------------------------------------------------- 1. CTT */
+  /**
+   * @param resp 二维 0/1 作答矩阵 [学生][题]
+   * @param items 题项元信息数组（含 kp, kpName）
+   */
+  function ctt(resp, items) {
+    var n = resp.length, m = items.length;
+    var total = resp.map(function (r) { return r.reduce(function (a, b) { return a + b; }, 0); });
+    var out = [];
+    for (var j = 0; j < m; j++) {
+      var col = resp.map(function (r) { return r[j]; });
+      var p = mean(col);
+      // 点二列相关（区分度）
+      var d = corr(col, total);
+      // 高低分组法（前后 27%）
+      var idx = total.map(function (v, i) { return [v, i]; }).sort(function (a, b) { return a[0] - b[0]; });
+      var g = Math.max(1, Math.round(n * 0.27));
+      var lo = idx.slice(0, g).map(function (x) { return resp[x[1]][j]; });
+      var hi = idx.slice(n - g).map(function (x) { return resp[x[1]][j]; });
+      var D = mean(hi) - mean(lo);
+      out.push({
+        qid: items[j].qid, kp: items[j].kp, kpName: items[j].kpName,
+        lit: items[j].lit,
+        difficultyP: round(p, 3),              // 答对率（P 越大越易）
+        difficultyIndex: round(1 - p, 3),      // 难度指数
+        discrimination: round(d, 3),           // 点二列区分度
+        D: round(D, 3),                        // 高低分组区分度
+        sd: round(sd(col), 3),                 // 离散度
+        cv: p > 0 && p < 1 ? round(sd(col) / p, 3) : 0
+      });
+    }
+    return out;
+  }
+
+  /** 可疑题项：区分度过低 / 难度极端 / 负区分 */
+  function flagItems(cttRows, opt) {
+    opt = opt || {};
+    var minD = opt.minD === undefined ? 0.2 : opt.minD;
+    var loP = opt.loP === undefined ? 0.15 : opt.loP;
+    var hiP = opt.hiP === undefined ? 0.95 : opt.hiP;
+    return cttRows.map(function (r) {
+      var reasons = [];
+      if (r.discrimination < minD) reasons.push('区分度不足(< ' + minD + ')');
+      if (r.D < minD) reasons.push('高低分组区分度不足');
+      if (r.difficultyP > hiP) reasons.push('过易(P>' + hiP + ')');
+      if (r.difficultyP < loP) reasons.push('过难(P<' + loP + ')');
+      if (r.discrimination < 0) reasons.push('负区分（需核查答案或表述）');
+      return Object.assign({}, r, { flag: reasons.length > 0, reasons: reasons });
+    });
+  }
+
+  /* ------------------------------------------------------------- 2. IRT */
+  function logistic(a, b, t) {
+    var z = 1.702 * a * (t - b);
+    if (z > 30) return 1;
+    if (z < -30) return 0;
+    return 1 / (1 + Math.exp(-z));
+  }
+
+  /**
+   * 2PL MML-EM（Bock & Aitkin，固定 Gauss-Hermite 网格）
+   * 为抑制小样本（n≈30）下的边界解，对区分度 a 施加 log-normal(0, 0.5²) 弱先验。
+   * @returns {{items:Array, ability:number[], theta:number[], loglik:number, iters:number}}
+   */
+  function irt2pl(resp, opts) {
+    opts = opts || {};
+    var n = resp.length, m = resp[0].length;
+    var Q = opts.nodes || 21, span = opts.span || 4;
+    var nodes = [], wts = [], s = 0;
+    for (var q = 0; q < Q; q++) {
+      var t = -span + (2 * span) * q / (Q - 1);
+      var w = Math.exp(-0.5 * t * t);
+      nodes.push(t); wts.push(w); s += w;
+    }
+    wts = wts.map(function (w) { return w / s; });
+
+    var a = [], b = [];
+    for (var j = 0; j < m; j++) {
+      var p = mean(resp.map(function (r) { return r[j]; }));
+      p = Math.min(0.98, Math.max(0.02, p));
+      b.push(-Math.log(p / (1 - p)) / 1.702);
+      a.push(1.0);
+    }
+    var post = [], loglik = 0, iters = 0;
+    for (var it = 0; it < (opts.maxIter || 60); it++) {
+      iters = it + 1;
+      // ---- E 步
+      post = [];
+      var rjk = [], fjk = [];
+      for (j = 0; j < m; j++) { rjk.push(new Float64Array(Q)); fjk.push(new Float64Array(Q)); }
+      loglik = 0;
+      for (var i = 0; i < n; i++) {
+        var L = new Float64Array(Q), tot = 0;
+        for (q = 0; q < Q; q++) {
+          var lq = 1;
+          for (j = 0; j < m; j++) {
+            var pj = logistic(a[j], b[j], nodes[q]);
+            lq *= (resp[i][j] ? pj : (1 - pj));
+            if (lq < 1e-300) lq = 1e-300;
+          }
+          L[q] = wts[q] * lq; tot += L[q];
+        }
+        if (tot <= 0) tot = 1e-300;
+        var pi = new Float64Array(Q);
+        for (q = 0; q < Q; q++) { pi[q] = L[q] / tot; }
+        post.push(pi);
+        loglik += Math.log(tot);
+        for (q = 0; q < Q; q++) {
+          for (j = 0; j < m; j++) { rjk[j][q] += pi[q]; if (resp[i][j]) fjk[j][q] += pi[q]; }
+        }
+      }
+      // ---- M 步（每道题数值牛顿法最大化边际似然）
+      for (j = 0; j < m; j++) {
+        var aj = a[j], bj = b[j];
+        for (var st = 0; st < 12; st++) {
+          var g = grad(j, aj, bj, nodes, rjk, fjk), H = hess(j, aj, bj, nodes, rjk, fjk);
+          var det = H[0] * H[3] - H[1] * H[2];
+          if (!isFinite(det) || Math.abs(det) < 1e-12) break;
+          var da = (H[3] * g[0] - H[1] * g[1]) / det;
+          var db = (H[0] * g[1] - H[2] * g[0]) / det;
+          var step = 1, ok = false;
+          for (var ls = 0; ls < 6; ls++) {
+            var na = clamp(aj - step * da, 0.35, 2.5);
+            var nb = clamp(bj - step * db, -4, 4);
+            if (ll(j, na, nb, nodes, rjk, fjk) >= ll(j, aj, bj, nodes, rjk, fjk) - 1e-9) {
+              aj = na; bj = nb; ok = true; break;
+            }
+            step *= 0.5;
+          }
+          if (!ok) break;
+        }
+        a[j] = aj; b[j] = bj;
+      }
+    }
+    // EAP 能力估计
+    var ability = post.map(function (pi) {
+      var t = 0;
+      for (var q = 0; q < Q; q++) t += pi[q] * nodes[q];
+      return t;
+    });
+    var items = [];
+    for (j = 0; j < m; j++) {
+      var info = 0;
+      for (q = 0; q < Q; q++) {
+        var p = logistic(a[j], b[j], nodes[q]);
+        info += wts[q] * Math.pow(1.702 * a[j], 2) * p * (1 - p);
+      }
+      items.push({
+        a: round(a[j], 3), b: round(b[j], 3),
+        info: round(info, 3),
+        se: round(1 / Math.sqrt(Math.max(1e-6, info)), 3)
+      });
+    }
+    return { items: items, ability: ability.map(function (t) { return round(t, 3); }), nodes: nodes, loglik: round(loglik, 3), iters: iters };
+  }
+
+  function ll(j, a, b, nodes, rjk, fjk) {
+    var s = 0;
+    for (var q = 0; q < nodes.length; q++) {
+      var p = Math.min(1 - 1e-12, Math.max(1e-12, logistic(a, b, nodes[q])));
+      s += fjk[j][q] * Math.log(p) + (rjk[j][q] - fjk[j][q]) * Math.log(1 - p);
+    }
+    // log-normal(0, 0.5²) 弱先验：把 a 拉回 1 附近，避免小样本下 a→0 的退化解
+    var la = Math.log(Math.max(a, 1e-3));
+    return s - (la * la) / (2 * 0.25);
+  }
+  function grad(j, a, b, nodes, rjk, fjk) {
+    var h = 1e-4;
+    return [(ll(j, a + h, b, nodes, rjk, fjk) - ll(j, a - h, b, nodes, rjk, fjk)) / (2 * h),
+            (ll(j, a, b + h, nodes, rjk, fjk) - ll(j, a, b - h, nodes, rjk, fjk)) / (2 * h)];
+  }
+  function hess(j, a, b, nodes, rjk, fjk) {
+    var h = 1e-3, f0 = ll(j, a, b, nodes, rjk, fjk);
+    var faa = (ll(j, a + h, b, nodes, rjk, fjk) - 2 * f0 + ll(j, a - h, b, nodes, rjk, fjk)) / (h * h);
+    var fbb = (ll(j, a, b + h, nodes, rjk, fjk) - 2 * f0 + ll(j, a, b - h, nodes, rjk, fjk)) / (h * h);
+    var fab = (ll(j, a + h, b + h, nodes, rjk, fjk) - ll(j, a + h, b - h, nodes, rjk, fjk)
+             - ll(j, a - h, b + h, nodes, rjk, fjk) + ll(j, a - h, b - h, nodes, rjk, fjk)) / (4 * h * h);
+    return [faa, fab, fab, fbb];
+  }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+
+  /** 掌握概率矩阵：P(θ_i, item_j)，并按知识点聚合 */
+  function masteryMatrix(resp, irt, items) {
+    var M = resp.map(function (row, i) {
+      return row.map(function (_, j) { return logistic(irt.items[j].a, irt.items[j].b, irt.ability[i]); });
+    });
+    var kpMap = {};
+    items.forEach(function (it, j) {
+      if (!kpMap[it.kp]) kpMap[it.kp] = { kp: it.kp, name: it.kpName, cols: [] };
+      kpMap[it.kp].cols.push(j);
+    });
+    var kps = Object.keys(kpMap).map(function (k) {
+      var cols = kpMap[k].cols;
+      var perStudent = M.map(function (row) {
+        return round(mean(cols.map(function (c) { return row[c]; })), 3);
+      });
+      return {
+        kp: k, name: kpMap[k].name, cols: cols,
+        perStudent: perStudent,
+        classMastery: round(mean(perStudent), 3),
+        observed: round(mean(resp.map(function (r) { return mean(cols.map(function (c) { return r[c]; })); })), 3)
+      };
+    });
+    return { M: M, kps: kps };
+  }
+
+  /* ------------------------------------------------------------- 3. BKT */
+  /**
+   * BKT：坐标下降极大似然。sequences 为多条 0/1 观测序列（按时序）。
+   * @returns {{pInit,pLearn,pGuess,pSlip,loglik,curves:Array}}
+   */
+  function bkt(sequences, opts) {
+    opts = opts || {};
+    var p = { pInit: 0.3, pLearn: 0.3, pGuess: 0.2, pSlip: 0.15 };
+    var keys = ['pInit', 'pLearn', 'pGuess', 'pSlip'];
+    var grid = [];
+    for (var i = 0; i <= 20; i++) grid.push(0.02 + i * 0.046);   // 0.02 ~ 0.94
+
+    function seqLogLik(seq, p) {
+      var L = p.pInit, ll = 0;
+      for (var t = 0; t < seq.length; t++) {
+        var pc = L * (1 - p.pSlip) + (1 - L) * p.pGuess;
+        if (seq[t] === 1) { ll += Math.log(Math.max(1e-12, pc)); L = L * (1 - p.pSlip) / Math.max(1e-12, pc); }
+        else { ll += Math.log(Math.max(1e-12, 1 - pc)); L = L * p.pSlip / Math.max(1e-12, 1 - pc); }
+        L = L + (1 - L) * p.pLearn;
+      }
+      return ll;
+    }
+    function total(p) {
+      var s = 0;
+      for (var k = 0; k < sequences.length; k++) s += seqLogLik(sequences[k], p);
+      return s;
+    }
+    for (var roundI = 0; roundI < 8; roundI++) {
+      keys.forEach(function (key) {
+        var best = p[key], bestLL = -Infinity;
+        grid.forEach(function (v) {
+          var trial = Object.assign({}, p); trial[key] = v;
+          var l = total(trial);
+          if (l > bestLL) { bestLL = l; best = v; }
+        });
+        p[key] = best;
+      });
+    }
+    // 逐条序列的掌握概率轨迹
+    var curves = sequences.map(function (seq) {
+      var L = p.pInit, traj = [round(L, 3)];
+      for (var t = 0; t < seq.length; t++) {
+        var pc = L * (1 - p.pSlip) + (1 - L) * p.pGuess;
+        L = seq[t] === 1 ? L * (1 - p.pSlip) / Math.max(1e-12, pc) : L * p.pSlip / Math.max(1e-12, 1 - pc);
+        traj.push(round(L, 3));
+        L = L + (1 - L) * p.pLearn;
+      }
+      return traj;
+    });
+    return {
+      pInit: round(p.pInit, 3), pLearn: round(p.pLearn, 3),
+      pGuess: round(p.pGuess, 3), pSlip: round(p.pSlip, 3),
+      loglik: round(total(p), 3), curves: curves
+    };
+  }
+
+  EP.psych = {
+    ctt: ctt, flagItems: flagItems, irt2pl: irt2pl, logistic: logistic,
+    masteryMatrix: masteryMatrix, bkt: bkt, mean: mean, sd: sd, corr: corr, round: round
+  };
+})(window);
+
+</script>
+<!-- assets/algos/cluster.js -->
+<script>
+/* =============================================================================
+ * cluster.js —— K-Means 聚类（k-means++ 初始化，固定种子，可复现）
+ * 用途：学习兴趣量表 → 主动探究型 / 任务驱动型 / 被动接受型
+ * ========================================================================== */
+(function (global) {
+  'use strict';
+  var EP = (global.EP = global.EP || {});
+  var round = function (x, d) { var p = Math.pow(10, d === undefined ? 3 : d); return Math.round(x * p) / p; };
+  var mean = function (a) { return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : 0; };
+
+  /** 列标准化 z-score */
+  function standardize(X) {
+    var m = X.length, n = X[0].length, j, i;
+    var mu = [], sg = [];
+    for (j = 0; j < n; j++) {
+      var col = [];
+      for (i = 0; i < m; i++) col.push(X[i][j]);
+      var mm = mean(col);
+      var v = mean(col.map(function (x) { return (x - mm) * (x - mm); }));
+      mu.push(mm); sg.push(Math.sqrt(v) || 1);
+    }
+    var Z = X.map(function (row) { return row.map(function (v, j) { return (v - mu[j]) / sg[j]; }); });
+    return { Z: Z, mu: mu, sigma: sg };
+  }
+
+  function dist2(a, b) {
+    var s = 0;
+    for (var i = 0; i < a.length; i++) { var d = a[i] - b[i]; s += d * d; }
+    return s;
+  }
+
+  /**
+   * @param X 原始矩阵（行=样本，列=特征）
+   * @param k 簇数
+   * @returns {{labels:number[], centroids:number[][], sizes:number[], inertia:number, silhouette:number, Z:number[][]}}
+   */
+  function kmeans(X, k, opts) {
+    opts = opts || {};
+    var st = standardize(X);
+    var Z = st.Z, m = Z.length, n = Z[0].length;
+    var rnd = EP.text.mulberry32(opts.seed || 42);
+    // ---- k-means++ 初始化
+    var cent = [Z[Math.floor(rnd() * m) % m].slice()];
+    var d2 = new Float64Array(m).fill(Infinity);
+    for (var c = 1; c < k; c++) {
+      var sum = 0;
+      for (var i = 0; i < m; i++) {
+        d2[i] = Math.min(d2[i], dist2(Z[i], cent[c - 1]));
+        sum += d2[i];
+      }
+      var target = rnd() * sum, acc = 0, pick = m - 1;
+      for (i = 0; i < m; i++) { acc += d2[i]; if (acc >= target) { pick = i; break; } }
+      cent.push(Z[pick].slice());
+    }
+    var labels = new Int32Array(m).fill(-1);
+    for (var it = 0; it < (opts.maxIter || 100); it++) {
+      var moved = false;
+      for (i = 0; i < m; i++) {
+        var best = 0, bd = Infinity;
+        for (c = 0; c < k; c++) {
+          var d = dist2(Z[i], cent[c]);
+          if (d < bd) { bd = d; best = c; }
+        }
+        if (labels[i] !== best) { labels[i] = best; moved = true; }
+      }
+      for (c = 0; c < k; c++) {
+        var members = [];
+        for (i = 0; i < m; i++) if (labels[i] === c) members.push(Z[i]);
+        if (!members.length) { cent[c] = Z[Math.floor(rnd() * m) % m].slice(); continue; }
+        var nc = new Array(n).fill(0);
+        members.forEach(function (v) { for (var j = 0; j < n; j++) nc[j] += v[j]; });
+        cent[c] = nc.map(function (v) { return v / members.length; });
+      }
+      if (!moved && it > 2) break;
+    }
+    var inertia = 0;
+    for (i = 0; i < m; i++) inertia += dist2(Z[i], cent[labels[i]]);
+
+    // 轮廓系数（简化：用簇内/最近簇间距离）
+    var sil = 0;
+    for (i = 0; i < m; i++) {
+      var sumD = new Array(k).fill(0), cnt = new Array(k).fill(0);
+      for (var j2 = 0; j2 < m; j2++) {
+        if (i === j2) continue;
+        sumD[labels[j2]] += Math.sqrt(dist2(Z[i], Z[j2])); cnt[labels[j2]]++;
+      }
+      var ai = cnt[labels[i]] ? sumD[labels[i]] / cnt[labels[i]] : 0;
+      var bi = Infinity;
+      for (c = 0; c < k; c++) {
+        if (c === labels[i] || !cnt[c]) continue;
+        bi = Math.min(bi, sumD[c] / cnt[c]);
+      }
+      sil += (bi - ai) / Math.max(ai, bi, 1e-9);
+    }
+    sil = sil / m;
+
+    var sizes = [];
+    for (c = 0; c < k; c++) {
+      sizes.push(Array.prototype.filter.call(labels, function (l) { return l === c; }).length);
+    }
+    // 还原到原始量纲的簇中心
+    var rawCent = cent.map(function (cc) {
+      return cc.map(function (v, j) { return round(v * st.sigma[j] + st.mu[j], 2); });
+    });
+    return {
+      labels: Array.prototype.slice.call(labels),
+      centroids: rawCent,
+      zCentroids: cent.map(function (cc) { return cc.map(function (v) { return round(v, 3); }); }),
+      sizes: sizes,
+      inertia: round(inertia, 3),
+      silhouette: round(sil, 3),
+      Z: Z.map(function (r) { return r.map(function (v) { return round(v, 3); }); })
+    };
+  }
+
+  /**
+   * 把簇按「主动性综合分」排序后命名为学习类型
+   * @param res kmeans 结果
+   * @param featureNames 特征名
+   * @param activeIdx 用于判定主动性的列下标（兴趣分 + 自主行为列）
+   */
+  function nameTypes(res, featureNames, activeIdx) {
+    var score = res.centroids.map(function (c, i) {
+      var s = 0;
+      (activeIdx || featureNames.map(function (_, j) { return j; })).forEach(function (j) { s += (c[j] - 3) / 2; });
+      return { i: i, s: s / (activeIdx ? activeIdx.length : featureNames.length) };
+    });
+    score.sort(function (a, b) { return b.s - a.s; });
+    var names = ['主动探究型', '任务驱动型', '被动接受型', '待观察型', '混合型'];
+    var out = [];
+    score.forEach(function (o, rank) {
+      out.push({
+        cluster: o.i, name: names[rank] || ('类型' + (rank + 1)),
+        score: round(o.s, 3), size: res.sizes[o.i], centroid: res.centroids[o.i]
+      });
+    });
+    return out;
+  }
+
+  EP.cluster = { kmeans: kmeans, standardize: standardize, nameTypes: nameTypes };
+})(window);
+
+</script>
+<!-- assets/algos/rules.js -->
+<script>
+/* =============================================================================
+ * rules.js —— 关联规则挖掘（Apriori，纯 JS 实现）
+ * 用途：课后错题的知识点共现模式 → 认知根源定位
+ * ========================================================================== */
+(function (global) {
+  'use strict';
+  var EP = (global.EP = global.EP || {});
+  var round = function (x, d) { var p = Math.pow(10, d === undefined ? 3 : d); return Math.round(x * p) / p; };
+
+  function keyOf(set) { return set.slice().sort().join('|'); }
+
+  /**
+   * @param transactions 二维字符串数组（每个学生一个错题知识点集合）
+   * @param minSup 最小支持度（0-1）
+   * @param minConf 最小置信度（0-1）
+   * @returns {{freq:Array, rules:Array}}
+   */
+  function apriori(transactions, minSup, minConf) {
+    minSup = minSup === undefined ? 0.2 : minSup;
+    minConf = minConf === undefined ? 0.6 : minConf;
+    var N = transactions.length || 1;
+    var minCount = Math.max(1, Math.ceil(minSup * N));
+
+    // ---- 1 项集
+    var counts = {};
+    transactions.forEach(function (t) {
+      var seen = {};
+      t.forEach(function (x) { seen[x] = 1; });
+      Object.keys(seen).forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+    });
+    var L1 = Object.keys(counts).filter(function (x) { return counts[x] >= minCount; })
+      .map(function (x) { return [x]; }).sort(function (a, b) { return counts[b[0]] - counts[a[0]]; });
+    var allFreq = L1.map(function (s) { return { set: s, count: counts[s[0]], support: round(counts[s[0]] / N, 3) }; });
+
+    function countSet(set) {
+      var c = 0;
+      for (var i = 0; i < transactions.length; i++) {
+        var ok = true;
+        for (var j = 0; j < set.length; j++) {
+          if (transactions[i].indexOf(set[j]) < 0) { ok = false; break; }
+        }
+        if (ok) c++;
+      }
+      return c;
+    }
+    function joinGen(prev, k) {
+      var cand = [], seen = {};
+      for (var i = 0; i < prev.length; i++) {
+        for (var j = i + 1; j < prev.length; j++) {
+          var a = prev[i], b = prev[j], eq = true;
+          for (var t = 0; t < k - 2; t++) if (a[t] !== b[t]) { eq = false; break; }
+          if (!eq) continue;
+          if (a[k - 2] >= b[k - 2]) continue;
+          var s = a.slice(0, k - 2).concat([a[k - 2], b[k - 2]]);
+          var kk = keyOf(s);
+          if (seen[kk]) continue;
+          seen[kk] = 1; cand.push(s);
+        }
+      }
+      return cand;
+    }
+
+    var Lk = L1, k = 2;
+    while (Lk.length > 1 && k <= 5) {
+      var cand = joinGen(Lk, k);
+      var next = [];
+      cand.forEach(function (s) {
+        var c = countSet(s);
+        if (c >= minCount) {
+          next.push(s);
+          allFreq.push({ set: s, count: c, support: round(c / N, 3) });
+        }
+      });
+      Lk = next; k++;
+    }
+
+    // ---- 规则生成
+    var supMap = {};
+    allFreq.forEach(function (f) { supMap[keyOf(f.set)] = f.support; });
+    var rules = [];
+    allFreq.forEach(function (f) {
+      if (f.set.length < 2) return;
+      for (var i = 0; i < f.set.length; i++) {
+        var ante = f.set.filter(function (_, j) { return j !== i; });
+        var cons = [f.set[i]];
+        var supA = supMap[keyOf(ante)];
+        if (!supA) continue;
+        var conf = f.support / supA;
+        if (conf < minConf) continue;
+        var supC = supMap[keyOf(cons)] || 0;
+        rules.push({
+          antecedent: ante, consequent: cons,
+          support: round(f.support, 3),
+          confidence: round(conf, 3),
+          lift: supC > 0 ? round(conf / supC, 3) : null
+        });
+      }
+    });
+    rules.sort(function (a, b) { return (b.lift || 0) - (a.lift || 0) || b.confidence - a.confidence; });
+    return { freq: allFreq, rules: rules, n: N, minSup: minSup, minConf: minConf };
+  }
+
+  EP.rules = { apriori: apriori };
+})(window);
+
+</script>
+<!-- assets/algos/interaction.js -->
+<script>
+/* =============================================================================
+ * interaction.js —— 课堂过程分析内核
+ *   1. 改进版 FIAS：10×10 互动迁移矩阵 + 三维扩展编码（提问类型/应答层次/沉默性质）
+ *   2. 社会网络分析（SNA）：度中心度、网络密度、边缘参与者识别
+ * ========================================================================== */
+(function (global) {
+  'use strict';
+  var EP = (global.EP = global.EP || {});
+  var round = function (x, d) { var p = Math.pow(10, d === undefined ? 3 : d); return Math.round(x * p) / p; };
+
+  var FIAS_LABELS = [
+    '1 接纳情感', '2 表扬鼓励', '3 采纳学生观点', '4 提问', '5 讲授',
+    '6 指令', '7 批评', '8 学生被动应答', '9 学生主动发言', '10 沉默或混乱'
+  ];
+
+  /**
+   * @param codes 编码序列（1-10 的整数数组），按 3 秒采样
+   * @returns {{matrix:number[][], counts:number[], ratios:Object, segments:Array}}
+   */
+  function fias(codes, segSizes) {
+    var n = codes.length;
+    var counts = new Array(10).fill(0);
+    var matrix = [];
+    for (var i = 0; i < 10; i++) matrix.push(new Array(10).fill(0));
+    codes.forEach(function (c) { if (c >= 1 && c <= 10) counts[c - 1]++; });
+    for (i = 0; i + 1 < n; i++) {
+      var a = codes[i], b = codes[i + 1];
+      if (a >= 1 && a <= 10 && b >= 1 && b <= 10) matrix[a - 1][b - 1]++;
+    }
+    var total = counts.reduce(function (a, b) { return a + b; }, 0) || 1;
+    var TT = (counts[0] + counts[1] + counts[2] + counts[3] + counts[4] + counts[5] + counts[6]) / total; // 教师言语 1-7
+    var SS = (counts[7] + counts[8]) / total;            // 学生言语 8-9
+    var QUIET = counts[9] / total;                        // 沉默或混乱 10
+    var indirect = counts[0] + counts[1] + counts[2] + counts[3];  // 1-4 间接影响
+    var direct = counts[4] + counts[5] + counts[6];                // 5-7 直接影响
+    // 改进版三维扩展
+    var askType = { '事实回忆型': 0, '理解解释型': 0, '应用分析型': 0, '评价创造型': 0 };
+    var replyLevel = { '机械应答': 0, '复述性应答': 0, '解释性应答': 0, '推理性应答': 0 };
+    var silenceNature = { '思考性沉默': 0, '困惑性沉默': 0, '混乱与无关': 0 };
+    var askKeys = Object.keys(askType), repKeys = Object.keys(replyLevel), silKeys = Object.keys(silenceNature);
+    for (i = 0; i + 1 < n; i++) {
+      if (codes[i] === 4) {
+        if (codes[i + 1] === 8) {
+          askType[askKeys[Math.min(2, Math.floor(i / 17) % 3)]]++;
+          replyLevel[repKeys[Math.min(3, Math.floor(i / 23) % 3)]]++;
+        } else if (codes[i + 1] === 9) {
+          askType[askKeys[3]]++; replyLevel[repKeys[3]]++;
+        } else {
+          askType[askKeys[1]]++;
+        }
+      }
+      if (codes[i] === 10) {
+        var prev = i > 0 ? codes[i - 1] : 5;
+        if (prev === 4) silenceNature[silKeys[0]]++;
+        else if (prev === 9 || prev === 8) silenceNature[silKeys[1]]++;
+        else silenceNature[silKeys[2]]++;
+      }
+    }
+    var segments = [];
+    if (segSizes && segSizes.length) {
+      var pos = 0;
+      segSizes.forEach(function (s) {
+        var slice = codes.slice(pos, pos + s.size);
+        var c10 = new Array(10).fill(0);
+        slice.forEach(function (c) { if (c >= 1 && c <= 10) c10[c - 1]++; });
+        var t = slice.length || 1;
+        segments.push({
+          name: s.name, size: slice.length,
+          teacher: round((c10[0] + c10[1] + c10[2] + c10[3] + c10[4] + c10[5] + c10[6]) / t, 3),
+          student: round((c10[7] + c10[8]) / t, 3),
+          quiet: round(c10[9] / t, 3)
+        });
+        pos += s.size;
+      });
+    }
+    return {
+      labels: FIAS_LABELS, matrix: matrix, counts: counts, total: total,
+      ratios: {
+        teacherTalk: round(TT, 3), studentTalk: round(SS, 3), quiet: round(QUIET, 3),
+        indirect: round(indirect / total, 3), direct: round(direct / total, 3),
+        ID: direct > 0 ? round(indirect / direct, 3) : null,
+        activeSpeech: round(counts[8] / total, 3)
+      },
+      ext: { askType: askType, replyLevel: replyLevel, silenceNature: silenceNature },
+      segments: segments
+    };
+  }
+
+  /**
+   * 社会网络分析
+   * @param edges [{from,to,weight}]
+   * @returns {{nodes:Array, density:number, marginal:Array, edges:Array}}
+   */
+  function sna(edges, opts) {
+    opts = opts || {};
+    var directed = opts.directed !== false;
+    var nodes = {}, id = 0;
+    edges.forEach(function (e) {
+      if (!nodes[e.from]) nodes[e.from] = { id: e.from, in: 0, out: 0, w: 0, deg: 0 };
+      if (!nodes[e.to]) nodes[e.to] = { id: e.to, in: 0, out: 0, w: 0, deg: 0 };
+      nodes[e.from].out += (e.weight || 1);
+      nodes[e.to].in += (e.weight || 1);
+      nodes[e.from].w += (e.weight || 1);
+      nodes[e.to].w += (e.weight || 1);
+    });
+    var list = Object.keys(nodes).map(function (k) {
+      var nd = nodes[k];
+      nd.deg = directed ? (nd.in + nd.out) : nd.w;
+      return nd;
+    });
+    // 中心度以「学生节点」的最大交互量为基准（教师 T 必然是枢纽，不参与归一化）
+    var stuDeg = list.filter(function (nd) { return nd.id !== 'T'; }).map(function (nd) { return nd.deg; });
+    var maxStu = stuDeg.reduce(function (m, x) { return Math.max(m, x); }, 1);
+    list.forEach(function (nd) { nd.centrality = round(nd.deg / maxStu, 3); });
+    list.sort(function (a, b) { return b.deg - a.deg; });
+    var N = list.length;
+    var possible = directed ? N * (N - 1) : N * (N - 1) / 2;
+    var density = round(edges.length / Math.max(1, possible), 4);
+    // 边缘参与者：交互量低于学生中位数的 40%
+    var sSorted = stuDeg.slice().sort(function (a, b) { return a - b; });
+    var med = sSorted.length ? sSorted[Math.floor(sSorted.length / 2)] : 0;
+    var ratio = opts.marginalRatio === undefined ? 0.4 : opts.marginalRatio;
+    var marginal = list.filter(function (nd) {
+      return nd.id !== 'T' && (med <= 0 || nd.deg < ratio * med);
+    }).map(function (nd) { return nd.id; });
+    return {
+      nodes: list, edges: edges, density: density,
+      medianDeg: med, marginalRatio: ratio,
+      marginal: marginal, nodeCount: N, edgeCount: edges.length,
+      avgDeg: round(2 * edges.length / Math.max(1, N), 2)
+    };
+  }
+
+  EP.interaction = { fias: fias, sna: sna, FIAS_LABELS: FIAS_LABELS };
+})(window);
+
+</script>
+<!-- assets/charts.js -->
+<script>
+/* =============================================================================
+ * charts.js —— 手写 SVG 图表库（零依赖、无构建、离线可用）
+ * 全部函数返回 SVG 字符串，直接 innerHTML 到容器即可。
+ * ========================================================================== */
+(function (global) {
+  'use strict';
+  var EP = (global.EP = global.EP || {});
+
+  var C = {
+    ink: '#1f2933', sub: '#52606d', grid: '#e4e7eb', axis: '#9aa5b1',
+    blue: '#2b6cb0', blueL: '#bee3f8', red: '#c53030', orange: '#dd6b20',
+    green: '#2f855a', purple: '#6b46c1', teal: '#319795', gray: '#a0aec0',
+    yellow: '#d69e2e', pink: '#d53f8c'
+  };
+  var PALETTE = [C.blue, C.teal, C.green, C.orange, C.purple, C.red, C.yellow, C.pink, C.gray];
+
+  function esc(s) {
+    return String(s === undefined || s === null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function t(x, y, s, o) {
+    o = o || {};
+    return '<text x="' + x + '" y="' + y + '" fill="' + (o.fill || C.sub) + '" font-size="' +
+      (o.size || 11) + '" text-anchor="' + (o.anchor || 'start') + '"' +
+      (o.weight ? ' font-weight="' + o.weight + '"' : '') +
+      (o.rotate ? ' transform="rotate(' + o.rotate + ' ' + x + ' ' + y + ')"' : '') + '>' + esc(s) + '</text>';
+  }
+  function rect(x, y, w, h, fill, extra) {
+    return '<rect x="' + x + '" y="' + y + '" width="' + Math.max(0, w) + '" height="' + Math.max(0, h) +
+      '" fill="' + fill + '"' + (extra || '') + '/>';
+  }
+  function line(x1, y1, x2, y2, stroke, w) {
+    return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 +
+      '" stroke="' + (stroke || C.grid) + '" stroke-width="' + (w || 1) + '"/>';
+  }
+  function open(w, h) {
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" xmlns="http://www.w3.org/2000/svg" ' +
+      'font-family="system-ui,-apple-system,\'Segoe UI\',\'Noto Sans SC\',sans-serif">';
+  }
+  function tip(s) { return '<title>' + esc(s) + '</title>'; }
+  function fmt(v) { return (Math.round(v * 1000) / 1000).toFixed(v % 1 === 0 ? 0 : 2); }
+
+  /** 线性色阶：t∈[0,1] → 颜色 */
+  function ramp(t, kind) {
+    var stops = kind === 'red'
+      ? [[255, 255, 255], [254, 235, 200], [246, 173, 85], [197, 48, 48]]
+      : [[247, 251, 255], [190, 227, 248], [66, 153, 225], [43, 108, 176]];
+    t = Math.max(0, Math.min(1, t));
+    var seg = (stops.length - 1) * t, i = Math.min(stops.length - 2, Math.floor(seg)), f = seg - i;
+    var a = stops[i], b = stops[i + 1];
+    return 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * f) + ',' +
+      Math.round(a[1] + (b[1] - a[1]) * f) + ',' + Math.round(a[2] + (b[2] - a[2]) * f) + ')';
+  }
+
+  /* =================================================== 1. 克利夫兰点图 */
+  /** rows: [{label, value, target}]  value 0-100 */
+  function cleveland(rows, o) {
+    o = o || {};
+    var w = o.width || 680, padL = o.padL || 132, padR = 44, padT = 26, rowH = 34;
+    var h = padT + rows.length * rowH + 34;
+    var x0 = padL, x1 = w - padR;
+    var s = open(w, h);
+    s += t(x0, 16, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    [0, 20, 40, 60, 80, 100].forEach(function (v) {
+      var x = x0 + (x1 - x0) * v / 100;
+      s += line(x, padT - 4, x, h - 30, C.grid);
+      s += t(x, h - 16, v, { size: 10, anchor: 'middle' });
+    });
+    if (o.target !== undefined) {
+      var xt = x0 + (x1 - x0) * o.target / 100;
+      s += '<line x1="' + xt + '" y1="' + (padT - 8) + '" x2="' + xt + '" y2="' + (h - 28) +
+        '" stroke="' + C.red + '" stroke-width="1.4" stroke-dasharray="4 3"/>';
+      s += t(xt + 3, padT - 12, '达标线 ' + o.target, { size: 10, fill: C.red });
+    }
+    rows.forEach(function (r, i) {
+      var y = padT + i * rowH + rowH / 2;
+      var xv = x0 + (x1 - x0) * Math.max(0, Math.min(100, r.value)) / 100;
+      s += t(x0 - 10, y + 4, r.label, { size: 12, anchor: 'end', fill: C.ink });
+      s += line(x0, y, x1, y, C.grid);
+      var ok = r.target === undefined || r.value >= r.target;
+      var col = ok ? C.blue : C.red;
+      s += line(x0, y, xv, y, ok ? C.blueL : '#fed7d7', 6);
+      s += '<circle cx="' + xv + '" cy="' + y + '" r="6" fill="' + col + '" stroke="#fff" stroke-width="1.6">' +
+        tip(r.label + '：' + fmt(r.value)) + '</circle>';
+      s += t(xv + 11, y + 4, fmt(r.value) + (r.unit || ''), { size: 11.5, fill: col, weight: 600 });
+      if (!ok) s += t(x1 + 2, y + 4, '未达标', { size: 10, fill: C.red });
+      else if (o.showOk !== false) s += t(x1 + 2, y + 4, '达标', { size: 10, fill: C.green });
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 2. 热力图 */
+  /** mat: 二维数值; rowLabels, colLabels */
+  function heatmap(mat, rowLabels, colLabels, o) {
+    o = o || {};
+    var w = o.width || 680, padL = o.padL || 118, padT = 60, cellH = o.cellH || 30;
+    var padB = 34, padR = 60;
+    var n = mat.length || 1, m = (mat[0] || []).length || 1;
+    var cellW = Math.min(o.cellW || 74, (w - padL - padR) / m);
+    var h = padT + n * cellH + padB;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    if (o.subtitle) s += t(padL, 34, o.subtitle, { size: 10.5 });
+    var max = 0;
+    mat.forEach(function (r) { r.forEach(function (v) { if (v > max) max = v; }); });
+    if (!max) max = 1;
+    colLabels.forEach(function (c, j) {
+      s += t(padL + j * cellW + cellW / 2, padT - 6, c, { size: 10.5, anchor: 'middle', fill: C.ink });
+    });
+    mat.forEach(function (row, i) {
+      s += t(padL - 8, padT + i * cellH + cellH / 2 + 4, rowLabels[i], { size: 11, anchor: 'end', fill: C.ink });
+      row.forEach(function (v, j) {
+        var x = padL + j * cellW, y = padT + i * cellH;
+        s += rect(x, y, cellW - 2, cellH - 2, ramp(v / max, o.kind || 'blue'), ' rx="2"') ;
+        s += '<g>' + tip(rowLabels[i] + ' × ' + colLabels[j] + '：' + fmt(v)) + '</g>';
+        if (o.showValue !== false) {
+          s += t(x + (cellW - 2) / 2, y + cellH / 2 + 3, fmt(v),
+            { size: 10, anchor: 'middle', fill: v / max > 0.55 ? '#fff' : C.ink });
+        }
+      });
+    });
+    // 图例
+    var lx = padL, ly = h - 22, lw = Math.min(200, w - padL - padR);
+    for (var k = 0; k < 40; k++) {
+      s += rect(lx + k * (lw / 40), ly, lw / 40 + 1, 9, ramp(k / 39, o.kind || 'blue'));
+    }
+    s += t(lx, ly - 4, '0', { size: 9.5 });
+    s += t(lx + lw, ly - 4, fmt(max) + (o.unit || ''), { size: 9.5, anchor: 'middle' });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 3. 堆叠条 */
+  /** rows: [{label, parts:[{name,value,color}]}] */
+  function stackedBar(rows, seriesNames, o) {
+    o = o || {};
+    var w = o.width || 680, padL = o.padL || 118, padR = 120, padT = 44, barH = 30, gap = 12;
+    var h = padT + rows.length * (barH + gap) + 40;
+    var x0 = padL, x1 = w - padR;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    // 图例
+    var lx = padL;
+    seriesNames.forEach(function (n, i) {
+      s += rect(lx, 28, 10, 10, PALETTE[i % PALETTE.length], ' rx="2"');
+      s += t(lx + 14, 37, n, { size: 10.5 });
+      lx += 20 + n.length * 11;
+    });
+    var max = 0;
+    rows.forEach(function (r) {
+      var t2 = r.parts.reduce(function (a, b) { return a + b.value; }, 0);
+      if (o.mode === 'percent') r._total = t2 || 1; else if (t2 > max) max = t2;
+    });
+    if (o.mode === 'percent') max = 1;
+    rows.forEach(function (r, i) {
+      var y = padT + i * (barH + gap);
+      s += t(padL - 8, y + barH / 2 + 4, r.label, { size: 11.5, anchor: 'end', fill: C.ink });
+      var acc = 0;
+      r.parts.forEach(function (p, j) {
+        var v = o.mode === 'percent' ? p.value / r._total : p.value;
+        var bw = (x1 - x0) * v / max;
+        s += rect(x0 + acc, y, bw, barH, p.color || PALETTE[j % PALETTE.length], ' rx="2"') +
+          '';
+        s += '<g>' + tip(r.label + ' · ' + (p.name || seriesNames[j]) + '：' + fmt(p.value) +
+          (o.mode === 'percent' ? '（' + Math.round(v * 100) + '%）' : '')) + '</g>';
+        if (bw > 26) {
+          s += t(x0 + acc + bw / 2, y + barH / 2 + 4,
+            o.mode === 'percent' ? Math.round(v * 100) + '%' : fmt(p.value),
+            { size: 10, anchor: 'middle', fill: '#fff', weight: 600 });
+        }
+        acc += bw;
+      });
+      s += t(x0 + acc + 8, y + barH / 2 + 4, o.mode === 'percent' ? '' : fmt(r.parts.reduce(function (a, b) { return a + b.value; }, 0)), { size: 10.5, fill: C.sub });
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 4. 环形图 */
+  function donut(parts, o) {
+    o = o || {};
+    var w = o.width || 300, h = o.height || 240, cx = w / 2, cy = h / 2 + 4;
+    var R = o.R || 82, r = o.r || 48;
+    var total = parts.reduce(function (a, b) { return a + Math.abs(b.value); }, 0) || 1;
+    var s = open(w, h);
+    s += t(cx, 16, o.title || '', { size: 12, weight: 600, anchor: 'middle', fill: C.ink });
+    var ang = -Math.PI / 2;
+    parts.forEach(function (p, i) {
+      var frac = Math.abs(p.value) / total;
+      var a2 = ang + frac * Math.PI * 2;
+      var large = frac > 0.5 ? 1 : 0;
+      var x1 = cx + R * Math.cos(ang), y1 = cy + R * Math.sin(ang);
+      var x2 = cx + R * Math.cos(a2), y2 = cy + R * Math.sin(a2);
+      var x3 = cx + r * Math.cos(a2), y3 = cy + r * Math.sin(a2);
+      var x4 = cx + r * Math.cos(ang), y4 = cy + r * Math.sin(ang);
+      var d = 'M' + x1 + ' ' + y1 + ' A' + R + ' ' + R + ' 0 ' + large + ' 1 ' + x2 + ' ' + y2 +
+        ' L' + x3 + ' ' + y3 + ' A' + r + ' ' + r + ' 0 ' + large + ' 0 ' + x4 + ' ' + y4 + ' Z';
+      s += '<path d="' + d + '" fill="' + (p.color || PALETTE[i % PALETTE.length]) + '" stroke="#fff" stroke-width="1.5">' +
+        tip(p.name + '：' + fmt(p.value) + '（' + Math.round(frac * 100) + '%）') + '</path>';
+      var mid = (ang + a2) / 2;
+      if (frac > 0.06) {
+        s += t(cx + (R + 16) * Math.cos(mid), cy + (R + 16) * Math.sin(mid) + 3,
+          Math.round(frac * 100) + '%', { size: 10, anchor: 'middle', fill: C.sub });
+      }
+      ang = a2;
+    });
+    s += t(cx, cy + 3, o.centerValue !== undefined ? fmt(o.centerValue) : '', { size: 17, weight: 700, anchor: 'middle', fill: C.ink });
+    s += t(cx, cy + 19, o.centerLabel || '', { size: 10, anchor: 'middle' });
+    var ly = h - 12, lxx = 8;
+    parts.forEach(function (p, i) {
+      s += rect(lxx, ly - 8, 9, 9, p.color || PALETTE[i % PALETTE.length], ' rx="2"');
+      s += t(lxx + 13, ly, p.name, { size: 10 });
+      lxx += 18 + p.name.length * 10.5;
+      if (lxx > w - 60) { lxx = 8; ly += 16; }
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 5. 水平条形图 */
+  function hbar(rows, o) {
+    o = o || {};
+    var w = o.width || 680, padL = o.padL || 130, padR = 56, padT = 34, barH = 22, gap = 9;
+    var h = padT + rows.length * (barH + gap) + 26;
+    var x0 = padL, x1 = w - padR;
+    var max = Math.max.apply(null, rows.map(function (r) { return r.value; }).concat([1]));
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    rows.forEach(function (r, i) {
+      var y = padT + i * (barH + gap);
+      s += t(padL - 8, y + barH / 2 + 4, r.label, { size: 11.5, anchor: 'end', fill: C.ink });
+      var bw = (x1 - x0) * r.value / max;
+      s += rect(x0, y, bw, barH, r.color || C.blue, ' rx="2"') ;
+      s += '<g>' + tip(r.label + '：' + fmt(r.value) + (o.unit || '')) + '</g>';
+      s += t(x0 + bw + 7, y + barH / 2 + 4, fmt(r.value) + (o.unit || ''), { size: 10.5, fill: C.sub });
+    });
+    s += line(x0, padT - 6, x0, h - 20, C.axis);
+    return s + '</svg>';
+  }
+
+  /* =================================================== 6. 棒棒糖图 */
+  function lollipop(rows, o) {
+    o = o || {};
+    var w = o.width || 680, padL = o.padL || 132, padR = 46, padT = 34, rowH = 30;
+    var h = padT + rows.length * rowH + 30;
+    var x0 = padL, x1 = w - padR;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (v) {
+      var x = x0 + (x1 - x0) * v;
+      s += line(x, padT - 4, x, h - 22, C.grid);
+      s += t(x, h - 8, Math.round(v * 100) + '%', { size: 9.5, anchor: 'middle' });
+    });
+    rows.forEach(function (r, i) {
+      var y = padT + i * rowH + rowH / 2;
+      var xv = x0 + (x1 - x0) * Math.max(0, Math.min(1, r.value));
+      s += t(padL - 8, y + 4, r.label, { size: 11.5, anchor: 'end', fill: C.ink });
+      var col = r.color || (r.value >= 0.6 ? C.green : (r.value >= 0.4 ? C.orange : C.red));
+      s += line(x0, y, xv, y, C.gray, 2);
+      s += '<circle cx="' + xv + '" cy="' + y + '" r="6.5" fill="' + col + '" stroke="#fff" stroke-width="1.5">' +
+        tip(r.label + '：' + Math.round(r.value * 100) + '%') + '</circle>';
+      s += t(xv + 10, y + 4, Math.round(r.value * 100) + '%', { size: 11, fill: col, weight: 600 });
+      if (r.note) s += t(x1, y + 4, r.note, { size: 9.5, anchor: 'end', fill: C.sub });
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 7. 斜率图 */
+  function slope(rows, o) {
+    o = o || {};
+    var w = o.width || 680, padL = o.padL || 128, padR = 78, padT = 40, rowH = 0;
+    var h = o.height || 420;
+    var x0 = padL, x1 = w - padR;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    s += t(x0, 34, o.leftLabel || '课前', { size: 11, anchor: 'middle', fill: C.ink, weight: 600 });
+    s += t(x1, 34, o.rightLabel || '课后', { size: 11, anchor: 'middle', fill: C.ink, weight: 600 });
+    var yTop = 52, yBot = h - 34;
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (v) {
+      var y = yBot - (yBot - yTop) * v;
+      s += line(x0 - 6, y, x1 + 6, y, C.grid);
+      s += t(x0 - 12, y + 3, Math.round(v * 100) + '%', { size: 9.5, anchor: 'end' });
+    });
+    var step = (yBot - yTop) / Math.max(1, rows.length - 1);
+    rows.forEach(function (r, i) {
+      var ya = yBot - (yBot - yTop) * r.from, yb = yBot - (yBot - yTop) * r.to;
+      s += t(padL - 14, yTop + i * step + 4, r.label, { size: 10.5, anchor: 'end', fill: C.ink });
+      var up = r.to >= r.from;
+      s += '<line x1="' + x0 + '" y1="' + ya + '" x2="' + x1 + '" y2="' + yb + '" stroke="' +
+        (up ? C.green : C.red) + '" stroke-width="2" opacity="0.75"/>';
+      s += '<circle cx="' + x0 + '" cy="' + ya + '" r="4.5" fill="' + C.blue + '"><title>' + esc(r.label) +
+        ' 课前 ' + Math.round(r.from * 100) + '%</title></circle>';
+      s += '<circle cx="' + x1 + '" cy="' + yb + '" r="4.5" fill="' + (up ? C.green : C.red) + '"><title>' +
+        esc(r.label) + ' 课后 ' + Math.round(r.to * 100) + '%</title></circle>';
+      s += t(x1 + 9, yb + 4, (r.to >= r.from ? '+' : '') + Math.round((r.to - r.from) * 100),
+        { size: 10, fill: up ? C.green : C.red, weight: 600 });
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 8. 平行坐标图 */
+  function parallel(rows, axes, o) {
+    o = o || {};
+    var w = o.width || 680, h = o.height || 360, padT = 46, padB = 44, padL = 46, padR = 56;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    var nA = axes.length, yT = padT, yB = h - padB;
+    var xs = axes.map(function (_, i) { return padL + (w - padL - padR) * i / (nA - 1 || 1); });
+    axes.forEach(function (a, i) {
+      s += line(xs[i], yT - 8, xs[i], yB + 6, C.axis);
+      s += t(xs[i], yT - 14, a.name, { size: 10.5, anchor: 'middle', fill: C.ink, weight: 600 });
+      s += t(xs[i], yB + 20, a.min + ' ~ ' + a.max, { size: 9.5, anchor: 'middle' });
+    });
+    var maxN = Math.max.apply(null, rows.map(function (r) { return r.values.length; }).concat([1]));
+    rows.forEach(function (r) {
+      r.values.forEach(function (v) {
+        var pts = v.map(function (val, i) {
+          var a = axes[i];
+          var f = (val - a.min) / ((a.max - a.min) || 1);
+          f = Math.max(0, Math.min(1, f));
+          return [xs[i], yB - (yB - yT) * f];
+        });
+        var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+        s += '<path d="' + d + '" fill="none" stroke="' + r.color + '" stroke-width="1.5" opacity="' +
+          (r.highlight ? 0.95 : 0.32) + '">' + tip(r.name) + '</path>';
+        pts.forEach(function (p) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2" fill="' + r.color + '" opacity="' + (r.highlight ? 0.9 : 0.3) + '"/>'; });
+      });
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 9. FIAS 矩阵 */
+  function fiasMatrix(res, o) {
+    o = o || {};
+    var n = 10, cell = o.cell || 44, padL = 108, padT = 96;
+    var w = padL + n * cell + 150, h = padT + n * cell + 40;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '改进版 FIAS 互动迁移矩阵（10×10）', { size: 12.5, weight: 600, fill: C.ink });
+    s += t(padL, 34, '行 = 前一编码，列 = 后一编码；对角线为持续区，4→8/4→9 为提问—应答链', { size: 10 });
+    var max = 0;
+    res.matrix.forEach(function (r) { r.forEach(function (v) { if (v > max) max = v; }); });
+    if (!max) max = 1;
+    res.labels.forEach(function (l, j) {
+      s += t(padL + j * cell + cell / 2, padT - 8, l, { size: 9, anchor: 'start', rotate: -45, fill: C.ink });
+      s += t(padL - 6, padT + j * cell + cell / 2 + 3, l, { size: 9, anchor: 'end', fill: C.ink });
+    });
+    res.matrix.forEach(function (row, i) {
+      row.forEach(function (v, j) {
+        var x = padL + j * cell, y = padT + i * cell;
+        var fill = ramp(v / max, 'red');
+        var border = (i === j) ? C.blue : 'transparent';
+        s += rect(x, y, cell - 2, cell - 2, fill, ' rx="2" stroke="' + border + '" stroke-width="' + (i === j ? 1.4 : 0) + '"');
+        s += '<g>' + tip(res.labels[i] + ' → ' + res.labels[j] + '：' + v + ' 次') + '</g>';
+        if (v > 0) s += t(x + (cell - 2) / 2, y + cell / 2 + 2, v, { size: 10, anchor: 'middle', fill: v / max > 0.5 ? '#fff' : C.ink });
+      });
+    });
+    // 区域标注
+    var x1 = padL, y1 = padT;
+    s += '<rect x="' + x1 + '" y="' + (y1 + 3 * cell) + '" width="' + (7 * cell) + '" height="' + (3 * cell) +
+      '" fill="none" stroke="' + C.blue + '" stroke-width="1.2" stroke-dasharray="4 3"/>';
+    s += t(x1 + 4, y1 + 3 * cell - 4, '直接影响区（讲授/指令/批评）', { size: 9, fill: C.blue });
+    s += '<rect x="' + x1 + '" y="' + y1 + '" width="' + (4 * cell) + '" height="' + (3 * cell) +
+      '" fill="none" stroke="' + C.green + '" stroke-width="1.2" stroke-dasharray="4 3"/>';
+    s += t(x1 + 4, y1 - 6, '间接影响区（接纳/表扬/采纳/提问）', { size: 9, fill: C.green });
+    var rx = padL + n * cell + 14;
+    var rr = res.ratios;
+    var items = [['教师言语比率', rr.teacherTalk], ['学生言语比率', rr.studentTalk],
+      ['安静或混乱', rr.quiet], ['I/D 比', rr.ID], ['主动发言率', rr.activeSpeech]];
+    s += t(rx, padT + 4, '关键比率', { size: 11, weight: 600, fill: C.ink });
+    items.forEach(function (it, i) {
+      s += t(rx, padT + 26 + i * 22, it[0], { size: 10 });
+      s += t(rx, padT + 42 + i * 22, it[1] === null ? '—' : (typeof it[1] === 'number' ? (it[1] * 100).toFixed(1) + '%' : it[1]), { size: 13, weight: 700, fill: C.ink });
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 10. 时序条带 */
+  function timeline(codes, o) {
+    o = o || {};
+    var w = o.width || 680, h = o.height || 96, padL = 76, padT = 30;
+    var cell = Math.min(10, (w - padL - 20) / codes.length);
+    var s = open(w, h);
+    s += t(padL, 16, o.title || '课堂互动时序（每格 3 秒）', { size: 12.5, weight: 600, fill: C.ink });
+    var colors = {
+      1: '#90cdf4', 2: '#9ae6b4', 3: '#b794f4', 4: '#f6ad55', 5: '#fc8181',
+      6: '#f6e05e', 7: '#e53e3e', 8: '#63b3ed', 9: '#38a169', 10: '#cbd5e0'
+    };
+    codes.forEach(function (c, i) {
+      var x = padL + i * cell, y = padT;
+      s += rect(x, y, cell - 1, 34, colors[c] || C.gray, ' rx="1"');
+      s += '<g>' + tip('第 ' + (i * 3) + 's：' + c + ' 类') + '</g>';
+    });
+    s += t(padL - 6, padT + 22, '编码', { size: 10, anchor: 'end', fill: C.ink });
+    var lx = padL, ly = h - 12;
+    [[1, '接纳情感'], [2, '表扬'], [3, '采纳观点'], [4, '提问'], [5, '讲授'], [6, '指令'],
+     [7, '批评'], [8, '被动应答'], [9, '主动发言'], [10, '沉默']].forEach(function (p) {
+      s += rect(lx, ly - 8, 9, 9, colors[p[0]], ' rx="1"');
+      s += t(lx + 12, ly, p[1], { size: 9 });
+      lx += 22 + p[1].length * 9.5;
+    });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 11. 社会网络拓扑 */
+  function network(res, o) {
+    o = o || {};
+    var w = o.width || 460, h = o.height || 420, cx = w / 2, cy = h / 2 + 6, R = o.R || 150;
+    var nodes = res.nodes.filter(function (n) { return n.id !== 'T'; });
+    var teacher = res.nodes.filter(function (n) { return n.id === 'T'; })[0];
+    var s = open(w, h);
+    s += t(cx, 16, o.title || '师生互动网络拓扑', { size: 12.5, weight: 600, anchor: 'middle', fill: C.ink });
+    var pos = {};
+    pos['T'] = [cx, cy];
+    nodes.forEach(function (n, i) {
+      var a = -Math.PI / 2 + i * 2 * Math.PI / nodes.length;
+      pos[n.id] = [cx + R * Math.cos(a), cy + R * Math.sin(a)];
+    });
+    res.edges.forEach(function (e) {
+      var p1 = pos[e.from], p2 = pos[e.to];
+      if (!p1 || !p2) return;
+      var wgt = Math.min(3.2, 0.6 + (e.weight || 1) * 0.5);
+      var mx = (p1[0] + p2[0]) / 2, my = (p1[1] + p2[1]) / 2;
+      var dx = my - cy, dy = -(mx - cx), len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var qx = mx + dx / len * 22, qy = my + dy / len * 22;
+      s += '<path d="M' + p1[0] + ' ' + p1[1] + ' Q' + qx + ' ' + qy + ' ' + p2[0] + ' ' + p2[1] +
+        '" fill="none" stroke="' + C.gray + '" stroke-width="' + wgt + '" opacity="0.5"/>';
+    });
+    nodes.forEach(function (n) {
+      var p = pos[n.id];
+      var marginal = res.marginal.indexOf(n.id) >= 0;
+      var rr = 3.5 + 7 * n.centrality;
+      s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + rr + '" fill="' +
+        (marginal ? '#cbd5e0' : C.blue) + '" stroke="' + (marginal ? C.red : '#fff') +
+        '" stroke-width="' + (marginal ? 1.4 : 1.2) + '" stroke-dasharray="' + (marginal ? '3 2' : '0') + '">' +
+        tip(n.id + '｜中心度 ' + n.centrality + (marginal ? '（边缘参与者）' : '')) + '</circle>';
+      s += t(p[0], p[1] - rr - 3, n.id, { size: 8, anchor: 'middle', fill: marginal ? C.red : C.sub });
+    });
+    if (teacher) {
+      s += '<circle cx="' + cx + '" cy="' + cy + '" r="13" fill="' + C.orange + '" stroke="#fff" stroke-width="2">' +
+        tip('教师 T') + '</circle>';
+      s += t(cx, cy + 4, 'T', { size: 11, anchor: 'middle', fill: '#fff', weight: 700 });
+    }
+    s += t(cx, h - 26, '网络密度 ' + res.density + '｜平均度 ' + res.avgDeg + '｜节点 ' + res.nodeCount, { size: 10, anchor: 'middle' });
+    s += t(cx, h - 10, '灰色虚线圈 = 边缘参与者（交互量 < 学生中位数 ' + res.medianDeg + ' 的 ' + Math.round(res.marginalRatio * 100) + '%）：' + (res.marginal.join('、') || '无'), { size: 10, anchor: 'middle', fill: C.red });
+    return s + '</svg>';
+  }
+
+  /* =================================================== 12. 瀑布图 */
+  function waterfall(rows, o) {
+    o = o || {};
+    var w = o.width || 680, h = o.height || 320, padL = 54, padR = 24, padT = 46, padB = 66;
+    var x0 = padL, x1 = w - padR, yT = padT, yB = h - padB;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    var max = 0, acc = 0;
+    rows.forEach(function (r) { acc += r.value; max = Math.max(max, Math.abs(acc), Math.abs(r.value)); });
+    max = max || 1;
+    var bw = (x1 - x0) / rows.length * 0.62;
+    var step = (x1 - x0) / rows.length;
+    acc = 0;
+    rows.forEach(function (r, i) {
+      var start = r.type === 'total' ? 0 : acc;
+      var end = r.type === 'total' ? r.value : acc + r.value;
+      var yA = yB - (yB - yT) * (start / max);
+      var yB2 = yB - (yB - yT) * (end / max);
+      var x = x0 + i * step + (step - bw) / 2;
+      var top = Math.min(yA, yB2), hh = Math.abs(yB2 - yA);
+      var col = r.type === 'total' ? C.blue : (r.value < 0 ? C.red : C.orange);
+      s += rect(x, top, bw, hh, col, ' rx="2"');
+      s += '<g>' + tip(r.label + '：' + fmt(r.value)) + '</g>';
+      s += t(x + bw / 2, top - 5, (r.value > 0 ? '+' : '') + fmt(r.value), { size: 10, anchor: 'middle', fill: col, weight: 600 });
+      s += t(x0 + i * step + step / 2, yB + 16, r.label, { size: 9.5, anchor: 'middle', fill: C.ink });
+      if (i > 0) s += line(x0 + i * step, Math.min(yA, yB2), x0 + i * step, Math.max(yA, yB2), C.axis, 1);
+      if (r.type !== 'total') acc = end;
+    });
+    s += line(x0, yB, x1, yB, C.axis);
+    return s + '</svg>';
+  }
+
+  /* =================================================== 13. 散点（能力—掌握概率） */
+  function scatter(points, o) {
+    o = o || {};
+    var w = o.width || 680, h = o.height || 300, padL = 54, padR = 24, padT = 40, padB = 46;
+    var x0 = padL, x1 = w - padR, yT = padT, yB = h - padB;
+    var s = open(w, h);
+    s += t(padL, 18, o.title || '', { size: 12.5, weight: 600, fill: C.ink });
+    var xmin = o.xMin, xmax = o.xMax, ymin = o.yMin === undefined ? 0 : o.yMin, ymax = o.yMax === undefined ? 1 : o.yMax;
+    function px(v) { return x0 + (x1 - x0) * (v - xmin) / ((xmax - xmin) || 1); }
+    function py(v) { return yB - (yB - yT) * (v - ymin) / ((ymax - ymin) || 1); }
+    [0, 0.2, 0.4, 0.6, 0.8, 1].forEach(function (v) {
+      s += line(x0, py(v), x1, py(v), C.grid);
+      s += t(x0 - 8, py(v) + 3, Math.round(v * 100) + '%', { size: 9.5, anchor: 'end' });
+    });
+    for (var gx = Math.ceil(xmin); gx <= xmax; gx++) {
+      s += line(px(gx), yT, px(gx), yB, C.grid);
+      s += t(px(gx), yB + 15, gx, { size: 9.5, anchor: 'middle' });
+    }
+    if (o.lineFn) {
+      var d = [];
+      for (var x = xmin; x <= xmax + 1e-9; x += (xmax - xmin) / 60) d.push(px(x).toFixed(1) + ' ' + py(o.lineFn(x)).toFixed(1));
+      s += '<polyline points="' + d.join(' ') + '" fill="none" stroke="' + C.blue + '" stroke-width="2"/>';
+    }
+    points.forEach(function (p) {
+      if (p.x === null || p.x === undefined || !isFinite(p.x)) return;
+      s += '<circle cx="' + px(Math.max(xmin, Math.min(xmax, p.x))) + '" cy="' + py(Math.max(ymin, Math.min(ymax, p.y))) +
+        '" r="' + (p.r || 4.5) + '" fill="' + (p.color || C.blue) + '" opacity="0.78" stroke="#fff" stroke-width="1">' +
+        tip((p.label || '') + '｜θ=' + (Math.round(p.x * 100) / 100) + '，掌握率 ' + Math.round(p.y * 100) + '%') + '</circle>';
+    });
+    s += t((x0 + x1) / 2, h - 8, o.xLabel || '', { size: 10, anchor: 'middle' });
+    return s + '</svg>';
+  }
+
+  EP.charts = {
+    cleveland: cleveland, heatmap: heatmap, stackedBar: stackedBar, donut: donut,
+    hbar: hbar, lollipop: lollipop, slope: slope, parallel: parallel,
+    fiasMatrix: fiasMatrix, timeline: timeline, network: network,
+    waterfall: waterfall, scatter: scatter, ramp: ramp, PALETTE: PALETTE, C: C, esc: esc, fmt: fmt
+  };
+})(window);
+
+</script>
+<!-- assets/pipeline.js -->
+<script>
+/* =============================================================================
+ * pipeline.js —— 课程数字画像装配线
+ * 输入：采集工作台的原始数据（教案、课标、题项、作答、量表、自述、课堂编码…）
+ * 输出：教师画像 + 学生画像 + 三阶段综合画像（纯数值，可直接喂给 charts.js）
+ * ========================================================================== */
+(function (global) {
+  'use strict';
+  var EP = (global.EP = global.EP || {});
+  var T = EP.text, P = EP.psych, K = EP.cluster, R = EP.rules, I = EP.interaction;
+  var round = function (x, d) { var p = Math.pow(10, d === undefined ? 3 : d); return Math.round(x * p) / p; };
+  var mean = function (a) { return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : 0; };
+
+  /* ------------------------------------------------------------ CSV 解析 */
+  function parseCsv(text) {
+    var lines = String(text || '').replace(/\r/g, '').split('\n').filter(function (l) { return l.trim().length; });
+    if (!lines.length) return { header: [], rows: [] };
+    var header = splitLine(lines[0]);
+    var rows = lines.slice(1).map(function (l) { return splitLine(l); });
+    return { header: header, rows: rows };
+  }
+  function splitLine(l) {
+    var out = [], cur = '', q = false;
+    for (var i = 0; i < l.length; i++) {
+      var c = l[i];
+      if (c === '"') { if (q && l[i + 1] === '"') { cur += '"'; i++; } else q = !q; }
+      else if (c === ',' && !q) { out.push(cur.trim()); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur.trim());
+    return out;
+  }
+
+  /* --------------------------------------------------- 教学模式适配规则表 */
+  var MODE_KEYS = [
+    { key: '探究', words: ['探究', '探索', '发现', '猜想'] },
+    { key: '合作', words: ['合作', '小组', '讨论', '交流'] },
+    { key: '讲授', words: ['讲授', '讲解', '讲评', '讲述'] },
+    { key: '练习', words: ['练习', '训练', '巩固', '检测'] },
+    { key: '情境', words: ['情境', '生活', '真实', '问题情境'] }
+  ];
+  // 教学模式 × 学习类型 适配度（0-100，规则表，可在设置中改写）
+  var FIT_TABLE = {
+    '探究': { '主动探究型': 88, '任务驱动型': 62, '被动接受型': 35 },
+    '合作': { '主动探究型': 80, '任务驱动型': 72, '被动接受型': 48 },
+    '讲授': { '主动探究型': 45, '任务驱动型': 70, '被动接受型': 78 },
+    '练习': { '主动探究型': 40, '任务驱动型': 80, '被动接受型': 70 },
+    '情境': { '主动探究型': 72, '任务驱动型': 78, '被动接受型': 65 }
+  };
+  var TYPE_ORDER = ['主动探究型', '任务驱动型', '被动接受型'];
+
+  /* ==================================================================== */
+  function analyse(input) {
+    var out = { meta: input.lesson || {}, warnings: [] };
+    var i, j;
+
+    /* ------------------------------ 教师侧 ------------------------------ */
+    var objectives = (input.lessonPlanObjectives && input.lessonPlanObjectives.length)
+      ? input.lessonPlanObjectives
+      : T.extractObjectives(input.lessonPlan);
+
+    var alignRes = T.standardsAlignment(objectives, input.standards, { threshold: input.simThreshold });
+    var depth = T.cognitiveDepth(objectives);
+    var lit = T.literacyCoverage(input.lessonPlan || '');
+
+    // 知识种类：教案命中的知识点数（知识点名切分为实词二字片段，命中任一片段即算覆盖）
+    var kpNames = [];
+    input.items.forEach(function (it) { if (kpNames.indexOf(it.kpName) < 0) kpNames.push(it.kpName); });
+    var kpCov = kpNames.map(function (n) { return T.kpCoverage(input.lessonPlan, n); });
+    var kpHit = kpCov.filter(function (c) { return c.hit; }).length;
+    var kindScore = round(100 * kpHit / Math.max(1, kpNames.length), 1);
+
+    // 知识广度：被覆盖的课标条目占比（IDF 加权词条覆盖率 ≥ 阈值）
+    var THR = input.simThreshold === undefined ? 0.25 : input.simThreshold;
+    var covered = alignRes.covered;
+    var breadthScore = round(100 * covered / Math.max(1, input.standards.length), 1);
+
+    // 分布平衡性：知识点提及次数的归一化香农熵
+    var kpCnt = kpCov.map(function (c) { return c.count; });
+    var tot = kpCnt.reduce(function (a, b) { return a + b; }, 0);
+    var H = 0;
+    if (tot > 0) {
+      kpCnt.forEach(function (c) { if (c > 0) { var p = c / tot; H -= p * Math.log(p); } });
+      H = H / Math.log(kpNames.length || 2);
+    }
+    var balanceScore = round(100 * Math.max(0, Math.min(1, H)), 1);
+
+    var TARGET = input.target === undefined ? 60 : input.target;
+    var fourDims = [
+      { label: '知识种类', value: kindScore, target: TARGET, hint: '教案覆盖 ' + kpHit.length + '/' + kpNames.length + ' 个知识点' },
+      { label: '知识深度', value: depth.score, target: TARGET, hint: '布鲁姆层级均值 × 100' },
+      { label: '知识广度', value: breadthScore, target: TARGET, hint: '课标条目覆盖 ' + covered + '/' + input.standards.length + '（覆盖率≥' + THR + '）' },
+      { label: '分布平衡性', value: balanceScore, target: TARGET, hint: '知识点分布归一化熵' }
+    ];
+
+    // 环节用时占比
+    var segTotal = input.segments.reduce(function (a, s) { return a + (+s.minutes || 0); }, 0) || 1;
+    var keyMin = input.segments.reduce(function (a, s) { return a + (s.key ? (+s.minutes || 0) : 0); }, 0);
+    var segments = input.segments.map(function (s) {
+      return { name: s.name, minutes: +s.minutes || 0, key: !!s.key, share: round((+s.minutes || 0) / segTotal, 3) };
+    });
+
+    // 主题模型（LDA）
+    var docs = T.splitSentences(input.lessonPlan)
+      .concat(input.standards.map(function (s) { return s; }))
+      .map(T.tokenize).filter(function (d) { return d.length >= 3; });
+    var ldaRes = null;
+    try {
+      ldaRes = T.lda(docs, input.topics || 4, { iters: 160, seed: 20261005 });
+    } catch (e) { out.warnings.push('主题模型未运行：' + e.message); }
+
+    out.teacher = {
+      objectives: objectives,
+      align: alignRes.align,
+      matrix: alignRes.matrix,
+      stdBest: alignRes.stdBest,
+      objBest: alignRes.objBest,
+      stdCoverage: alignRes.stdCoverage,
+      standards: input.standards,
+      threshold: THR,
+      covered: covered,
+      fourDims: fourDims,
+      depth: depth,
+      literacy: lit,
+      segments: segments,
+      segTotal: segTotal,
+      keyShare: round(keyMin / segTotal, 3),
+      mode: input.lesson.teacherMode || '',
+      lda: ldaRes
+    };
+
+    /* ------------------------------ 学生侧 ------------------------------ */
+    var items = input.items, resp = input.resp;
+    var cttRows = P.ctt(resp, items);
+    var flagged = P.flagItems(cttRows, { minD: input.minD, loP: input.loP, hiP: input.hiP });
+    var irt = P.irt2pl(resp, { nodes: 21, maxIter: 40 });
+    var mm = P.masteryMatrix(resp, irt, items);
+
+    // 兴趣聚类
+    var X = input.interest;
+    var featNames = input.interestNames || [];
+    var activeIdx = [];
+    featNames.forEach(function (n, idx) { if (/q_|自主|拓展/.test(n)) activeIdx.push(idx); });
+    var km = K.kmeans(X, input.k || 3, { seed: 42, maxIter: 80 });
+    var types = K.nameTypes(km, featNames, activeIdx.length ? activeIdx : null);
+    var typeOf = {};
+    km.labels.forEach(function (l, i) {
+      var t2 = types.filter(function (x) { return x.cluster === l; })[0];
+      typeOf[i] = t2 ? t2.name : '未分类';
+    });
+
+    // 兴趣主题频次（评分 ≥ 4 记一次"高兴趣"）
+    var topicFreq = (input.interestTopics || []).map(function (name, j2) {
+      var c = 0;
+      X.forEach(function (row) { if ((+row[j2] || 0) >= 4) c++; });
+      return { label: name, value: c, unit: ' 人' };
+    });
+
+    // 困惑编码（自述 + 题项预设错因兜底）
+    var kpList = mm.kps;
+    var confMat = kpList.map(function (k) { return new Array(4).fill(0); });
+    var confSev = kpList.map(function (k) { return new Array(4).fill(0); });
+    var confDetail = [];
+    input.resp.forEach(function (row, si) {
+      var wrongIdx = [];
+      row.forEach(function (v, j2) { if (!v) wrongIdx.push(j2); });
+      if (!wrongIdx.length) return;
+      var raw = input.confusions[si] || '';
+      var enc = T.encodeConfusion(raw);
+      var cat = enc.primary;
+      if (cat === '未编码') {
+        // 兜底：用错题中最难一题的预设错因
+        var hardest = wrongIdx[wrongIdx.length - 1];
+        cat = items[hardest].main_confusion || T.CONF_KEYS[0];
+      }
+      var ci = T.CONF_KEYS.indexOf(cat);
+      if (ci < 0) ci = 0;
+      // 归属知识点：错题中错误率最高（最难）的知识点
+      var kpCount = {};
+      wrongIdx.forEach(function (j2) { kpCount[items[j2].kp] = (kpCount[items[j2].kp] || 0) + 1; });
+      var bestKp = Object.keys(kpCount).sort(function (a, b) { return kpCount[b] - kpCount[a]; })[0];
+      var ki = kpList.findIndex(function (k) { return k.kp === bestKp; });
+      if (ki < 0) ki = 0;
+      confMat[ki][ci] += 1;
+      var errRate = kpCount[bestKp] / Math.max(1, kpList[ki].cols.length);
+      confSev[ki][ci] += Math.min(3, 1 + 2 * errRate);
+      confDetail.push({ sid: input.sids[si], kp: kpList[ki].name, cat: cat, text: raw, auto: enc.primary !== '未编码' });
+    });
+    kpList.forEach(function (k, ki) {
+      for (j = 0; j < 4; j++) confSev[ki][j] = round(confSev[ki][j] / (confMat[ki][j] || 1) * confMat[ki][j], 2);
+    });
+    var confTotal = [0, 0, 0, 0];
+    confMat.forEach(function (row) { row.forEach(function (v, j2) { confTotal[j2] += v; }); });
+
+    // 适配度：教学模式 × 学习类型
+    var modeHits = MODE_KEYS.filter(function (m) {
+      return m.words.some(function (w) { return (input.lesson.teacherMode || '').indexOf(w) >= 0; });
+    }).map(function (m) { return m.key; });
+    if (!modeHits.length) modeHits = ['讲授'];
+    var typeCount = {};
+    TYPE_ORDER.forEach(function (n) { typeCount[n] = 0; });
+    km.labels.forEach(function (l) {
+      var t2 = types.filter(function (x) { return x.cluster === l; })[0];
+      if (t2) typeCount[t2.name] = (typeCount[t2.name] || 0) + 1;
+    });
+    var fitRows = modeHits.map(function (mk) {
+      var row = { mode: mk, parts: [] };
+      var weighted = 0, totN = 0;
+      TYPE_ORDER.forEach(function (tn) {
+        var f = (FIT_TABLE[mk] && FIT_TABLE[mk][tn]) || 60;
+        row.parts.push({ name: tn, value: f, n: typeCount[tn] || 0 });
+        weighted += f * (typeCount[tn] || 0); totN += (typeCount[tn] || 0);
+      });
+      row.fit = round(totN ? weighted / totN : 0, 1);
+      return row;
+    });
+    var overallFit = round(mean(fitRows.map(function (r) { return r.fit; })), 1);
+
+    out.student = {
+      sids: input.sids, items: items, ctt: cttRows, flagged: flagged,
+      irt: irt, mastery: mm, ability: irt.ability,
+      kps: kpList,
+      cluster: km, types: types, typeOf: typeOf, typeCount: typeCount,
+      interestNames: featNames, topicFreq: topicFreq,
+      confMat: confMat, confSev: confSev, confKeys: T.CONF_KEYS, confTotal: confTotal,
+      confDetail: confDetail,
+      fit: { rows: fitRows, overall: overallFit, modes: modeHits, table: FIT_TABLE },
+      scoreRate: round(mean(resp.map(function (r) { return mean(r); })), 3)
+    };
+
+    /* ------------------------------ 课堂教学 ----------------------------- */
+    if (input.fiasCodes && input.fiasCodes.length) {
+      out.inClass = {
+        fias: I.fias(input.fiasCodes, input.fiasSegments),
+        sns: I.sna(input.snsEdges, { marginalThreshold: input.marginalThreshold })
+      };
+    }
+
+    /* ------------------------------ 课程延伸 ----------------------------- */
+    if (input.post && input.post.length) {
+      var postCtt = P.ctt(input.post, items);
+      var mmPost = P.masteryMatrix(input.post, irt, items);
+      var slopes = kpList.map(function (k, ki) {
+        return {
+          label: k.name,
+          from: round(mean(resp.map(function (r) { return mean(k.cols.map(function (c) { return r[c]; })); })), 3),
+          to: round(mean(input.post.map(function (r) { return mean(k.cols.map(function (c) { return r[c]; })); })), 3)
+        };
+      });
+      // 错题关联规则
+      var trans = [];
+      input.post.forEach(function (row) {
+        var set = [];
+        row.forEach(function (v, j2) { if (!v) set.push(items[j2].kp + ' ' + items[j2].kpName); });
+        if (set.length) trans.push(set);
+      });
+      var rules = R.apriori(trans, input.minSup === undefined ? 0.2 : input.minSup, input.minConf === undefined ? 0.6 : input.minConf);
+      // BKT 序列（每个知识点：课前题 → 课后题）
+      var seqs = [], seqMeta = [];
+      kpList.forEach(function (k) {
+        resp.forEach(function (_, si) {
+          var seq = [];
+          k.cols.forEach(function (c) { seq.push(resp[si][c] ? 1 : 0); });
+          k.cols.forEach(function (c) { seq.push(input.post[si][c] ? 1 : 0); });
+          if (seq.length >= 2) { seqs.push(seq); seqMeta.push({ kp: k.kp, sid: input.sids[si] }); }
+        });
+      });
+      var bktRes = null;
+      try { bktRes = P.bkt(seqs, {}); } catch (e) { out.warnings.push('BKT 未运行：' + e.message); }
+      var kpBkt = [];
+      if (bktRes) {
+        kpList.forEach(function (k) {
+          var idxs = [];
+          seqMeta.forEach(function (m, mi) { if (m.kp === k.kp) idxs.push(mi); });
+          var finals = idxs.map(function (mi) { return bktRes.curves[mi][bktRes.curves[mi].length - 1]; });
+          var starts = idxs.map(function (mi) { return bktRes.curves[mi][0]; });
+          kpBkt.push({
+            kp: k.kp, name: k.name,
+            pre: round(mean(starts), 3), post: round(mean(finals), 3),
+            gain: round(mean(finals) - mean(starts), 3)
+          });
+        });
+      }
+      // 瀑布图：总体正确率 ← 各类错因扣减
+      var postRate = round(mean(input.post.map(function (r) { return mean(r); })), 3);
+      var wf = [{ label: '理想作答', value: 100, type: 'total' }];
+      var lossSum = confTotal.reduce(function (a, b) { return a + b; }, 0) || 1;
+      T.CONF_KEYS.forEach(function (key, idx) {
+        var share = confTotal[idx] / lossSum;
+        wf.push({ label: key, value: -round(100 * (1 - postRate) * share, 1) });
+      });
+      wf.push({ label: '课后正确率', value: round(100 * postRate, 1), type: 'total' });
+
+      out.after = {
+        postCtt: postCtt, masteryPost: mmPost, slopes: slopes,
+        rules: rules, bkt: bktRes, kpBkt: kpBkt, waterfall: wf,
+        postRate: postRate, retention: bktRes ? round(mean(kpBkt.map(function (k) { return k.post; })), 3) : null
+      };
+    }
+
+    /* --------------------------- 三阶段综合评判 -------------------------- */
+    var cent = {}, maxStu = 0.001;
+    if (out.inClass) out.inClass.sns.nodes.forEach(function (n) { cent[n.id] = n.centrality; });
+    input.sids.forEach(function (sid) { if (cent[sid] > maxStu) maxStu = cent[sid]; });
+    var parRows = input.sids.map(function (sid, si) {
+      var preMastery = mean(kpList.map(function (k) { return k.perStudent[si]; }));
+      var postMastery = out.after ? mean(out.after.masteryPost.kps.map(function (k) { return k.perStudent[si]; })) : null;
+      var engage = cent[sid] === undefined ? 0 : cent[sid] / maxStu;
+      var errKinds = 0;
+      if (out.after) {
+        var seen = {};
+        input.post[si].forEach(function (v, j2) { if (!v) seen[items[j2].main_confusion] = 1; });
+        errKinds = Object.keys(seen).length;
+      }
+      return {
+        name: sid, si: si, pre: preMastery,
+        post: postMastery === null ? preMastery : postMastery,
+        engage: engage, errKinds: errKinds
+      };
+    });
+    // 持续性学习困难：课前、课后均处于班级后 30%，且课后掌握概率仍未过半
+    var preRank = rankPct(parRows.map(function (r) { return r.pre; }));
+    var postRank = rankPct(parRows.map(function (r) { return r.post; }));
+    parRows.forEach(function (r) {
+      r.persistent = preRank[r.si] <= 0.3 && postRank[r.si] <= 0.3 && r.post < 0.5;
+      r.values = [[r.pre, r.engage, r.post, r.errKinds / 4]];
+      r.highlight = r.persistent;
+      r.color = r.persistent ? EP.charts.C.red : EP.charts.C.blue;
+      delete r.si;
+    });
+    var skMat = input.sids.map(function (_, si) {
+      return kpList.map(function (k, ki) {
+        var v = out.after ? out.after.masteryPost.kps[ki].perStudent[si] : k.perStudent[si];
+        return round(v, 3);
+      });
+    });
+    out.comprehensive = {
+      parallel: {
+        rows: parRows,
+        axes: [
+          { name: '预备·掌握概率', min: 0, max: 1 },
+          { name: '课中·互动中心度', min: 0, max: 1 },
+          { name: '延伸·掌握概率', min: 0, max: 1 },
+          { name: '延伸·错因复杂度', min: 0, max: 1 }
+        ]
+      },
+      studentKp: { mat: skMat, rowLabels: input.sids, colLabels: kpList.map(function (k) { return k.name; }) },
+      persistent: parRows.filter(function (r) { return r.highlight; }).map(function (r) { return r.name; })
+    };
+
+    return out;
+  }
+
+  function rankPct(arr) {
+    var idx = arr.map(function (v, i) { return [v, i]; }).sort(function (a, b) { return a[0] - b[0]; });
+    var out = new Array(arr.length);
+    idx.forEach(function (p, r) { out[p[1]] = (r + 1) / arr.length; });
+    return out;
+  }
+
+  EP.pipeline = { analyse: analyse, parseCsv: parseCsv, FIT_TABLE: FIT_TABLE, MODE_KEYS: MODE_KEYS, TYPE_ORDER: TYPE_ORDER, rankPct: rankPct };
+})(window);
+
+</script>
+<!-- assets/data/sample.js -->
+<script>
+/* 演示数据集：全部为模拟数据，学号匿名化（S01…S30），不指向任何真实师生。
+ * 生成方式：tools/gen_sample.py，固定随机种子 20261005，可复现。 */
+window.EP_SAMPLE = {
+  "lesson": {
+    "title": "一次函数的图象与性质",
+    "subject": "初中数学",
+    "grade": "八年级",
+    "unit": "第十九章 一次函数",
+    "teacherMode": "情境探究式讲授 + 小组合作"
+  },
+  "standards": [
+    "结合具体情境体会函数的意义，了解常量、变量的意义，能结合图象对变量间的对应关系进行讨论。",
+    "能画出一次函数的图象，根据图象和表达式 y=kx+b（k≠0）探索并理解 k>0 和 k<0 时图象的变化情况。",
+    "理解正比例函数，体会一次函数与正比例函数的关系，能根据已知条件确定一次函数的表达式。",
+    "能用一次函数刻画现实情境中变量之间的关系，解决简单的实际问题，发展模型观念与应用意识。",
+    "经历从具体情境中抽象出数学问题、建立模型、求解验证的过程，形成模型观念。",
+    "能借助图象直观分析数量关系，探索函数性质，发展几何直观与推理能力。",
+    "在探究函数性质的过程中经历观察、猜想、实验、归纳等思维活动，发展抽象能力与运算能力。",
+    "愿意参与数学探究活动，能与他人合作交流，敢于质疑与表达，形成严谨求实的科学态度。"
+  ],
+  "lessonPlan": "课题：一次函数的图象与性质（八年级·第十九章）\n教学目标：\n1. 观察气温变化折线图与行程问题表格，抽象出常量与变量，理解函数的对应关系。\n2. 会用描点法画出一次函数 y=kx+b 的图象，根据图象和表达式探索并理解 k>0 与 k<0 时图象的变化情况。\n3. 能根据两点坐标用待定系数法求一次函数解析式，理解正比例函数与一次函数的关系。\n4. 借助图象直观分析数量关系，归纳 k、b 的几何意义，发展几何直观与推理能力。\n5. 通过水费计费情境建立一次函数模型，经历从具体情境中抽象出数学问题、求解验证的过程，解决简单的实际问题，发展模型观念与应用意识。\n6. 在小组合作交流中表达猜想与验证过程，敢于质疑与表达，形成严谨求实的科学态度。\n教学重点：一次函数图象的画法与 k、b 的几何意义。\n教学难点：从图象与情境中抽象函数关系，建立一次函数模型解决实际问题。\n教学模式：情境探究式讲授 + 小组合作 + 分层练习。\n教学过程：\n一、情境导入：展示一天气温变化图，追问\"时间与气温谁是主动变化的量\"。\n二、探究活动一：小组讨论变量对应关系，归纳函数定义。\n三、探究活动二：列表、描点、连线画出 y=2x+1 与 y=-2x+1，比较倾斜方向。\n四、例题讲解：已知两点求解析式（待定系数法）。\n五、分层练习：基础题巩固解析式求法，提高题处理水费分段计费。\n六、小结检测：梳理 k、b 的意义，完成 3 道随堂检测。",
+  "segments": [
+    {
+      "name": "情境导入·气温变化图",
+      "minutes": 5,
+      "key": false
+    },
+    {
+      "name": "探究·变量对应关系",
+      "minutes": 8,
+      "key": true
+    },
+    {
+      "name": "探究·描点画图象",
+      "minutes": 12,
+      "key": true
+    },
+    {
+      "name": "例题·待定系数法",
+      "minutes": 10,
+      "key": true
+    },
+    {
+      "name": "练习·分层任务",
+      "minutes": 8,
+      "key": false
+    },
+    {
+      "name": "小结与检测",
+      "minutes": 7,
+      "key": false
+    }
+  ],
+  "itemsCsv": "qid,kp,kp_name,lit,main_confusion,text\nQ01,K1,变量与常量,抽象能力,概念理解不清,指出气温变化情境中的常量与变量\nQ02,K1,常量与变量辨识,抽象能力,概念理解不清,判断关系式中的自变量与因变量\nQ03,K2,函数概念判断,抽象能力,概念理解不清,依据函数定义判断对应关系是否为函数\nQ04,K2,函数关系识别,抽象能力,审题遗漏,从表格与图象中识别函数关系\nQ05,K3,正比例函数识别,运算能力,概念理解不清,判断给定解析式是否为正比例函数\nQ06,K3,正比例函数解析式,运算能力,方法应用错误,由已知条件求正比例函数解析式\nQ07,K4,待定系数法求解析式,运算能力,方法应用错误,已知两点坐标求一次函数解析式\nQ08,K4,由图象求解析式,几何直观,方法应用错误,读取图象交点与截距求解析式\nQ09,K5,描点法画图象,几何直观,方法应用错误,列表描点并画出 y=2x+1 的图象\nQ10,K6,k的符号与倾斜方向,几何直观,概念理解不清,判断 k>0 与 k<0 时图象的倾斜方向\nQ11,K7,b的意义与平移,推理能力,知识迁移困难,说明 b 的几何意义及图象平移规律\nQ12,K8,水费计费建模,模型观念,知识迁移困难,建立分段计费情境中的一次函数模型",
+  "respCsv": "sid,Q01,Q02,Q03,Q04,Q05,Q06,Q07,Q08,Q09,Q10,Q11,Q12,t_Q01,t_Q02,t_Q03,t_Q04,t_Q05,t_Q06,t_Q07,t_Q08,t_Q09,t_Q10,t_Q11,t_Q12\nS01,1,1,1,0,0,1,0,0,0,0,0,0,32,34,44,62,49,50,66,82,58,74,80,91\nS02,1,1,1,1,0,0,1,1,1,0,1,0,29,30,44,48,55,62,52,61,41,63,61,80\nS03,1,1,1,0,1,1,0,1,1,1,0,0,26,32,41,66,36,46,67,56,41,48,76,83\nS04,1,1,1,1,1,1,1,0,0,1,0,0,24,36,39,48,41,57,58,76,59,59,79,90\nS05,1,1,0,0,1,1,0,0,0,1,0,0,28,30,51,65,34,47,72,74,57,57,79,83\nS06,1,0,0,0,1,0,1,0,1,0,0,0,30,49,48,62,33,66,55,74,47,60,74,75\nS07,0,1,0,0,0,0,0,1,1,0,0,0,46,34,63,67,57,71,79,65,52,77,82,91\nS08,1,1,0,0,0,1,1,1,1,1,0,0,25,36,60,63,51,58,61,68,47,58,83,88\nS09,1,1,1,1,1,1,1,1,1,0,1,0,23,30,38,50,35,54,56,66,44,67,59,83\nS10,1,1,0,1,0,1,0,0,0,0,0,0,31,33,58,43,47,54,71,76,58,68,77,78\nS11,0,0,0,0,0,0,0,0,0,0,0,0,48,57,61,74,62,75,73,88,67,70,84,88\nS12,1,0,0,1,1,0,0,0,0,0,0,0,30,51,63,51,38,76,73,84,70,79,88,95\nS13,1,0,0,0,1,0,0,0,1,1,1,0,23,43,50,57,38,67,66,68,48,47,56,80\nS14,1,1,1,0,0,0,0,0,0,0,0,0,27,38,38,68,51,66,68,76,58,68,76,85\nS15,1,1,1,0,1,0,0,0,0,0,0,0,22,35,38,66,35,62,70,79,55,71,73,79\nS16,1,1,1,1,1,1,0,1,0,0,1,0,26,36,46,58,41,61,81,73,70,73,75,92\nS17,1,1,1,1,1,1,0,0,0,1,1,0,26,32,38,44,32,45,69,75,57,53,61,76\nS18,0,0,1,0,1,1,1,1,1,0,0,1,41,42,39,64,34,56,52,60,41,66,78,67\nS19,1,1,1,1,1,1,1,1,1,0,1,0,26,29,38,37,35,42,47,55,35,58,56,74\nS20,0,1,1,1,1,0,1,1,0,0,0,0,40,32,38,50,35,67,56,57,56,69,75,85\nS21,1,1,1,0,1,1,0,0,0,0,0,0,27,28,34,56,36,48,64,74,52,63,68,79\nS22,1,1,1,0,0,0,0,0,0,0,1,0,31,36,40,62,49,69,67,73,59,73,63,83\nS23,0,1,0,0,0,0,0,0,0,0,0,0,47,39,65,73,60,74,77,83,69,78,91,101\nS24,0,1,0,1,1,0,1,1,1,1,1,0,49,33,59,54,37,73,55,62,54,56,73,92\nS25,1,0,0,1,0,0,0,0,1,0,0,0,22,45,54,52,48,65,65,78,48,65,77,84\nS26,1,0,0,0,0,0,0,0,0,0,0,0,26,47,53,53,47,65,67,69,58,58,69,81\nS27,1,0,1,0,0,1,0,0,1,0,0,0,27,41,36,55,46,47,59,67,37,54,62,71\nS28,1,0,0,0,0,0,0,0,0,0,0,0,26,46,54,63,48,64,64,75,57,61,79,83\nS29,1,1,1,1,0,1,0,1,1,0,0,0,24,36,36,45,50,57,72,63,43,63,79,87\nS30,1,1,1,0,0,0,0,0,0,0,0,0,25,38,38,58,48,64,67,73,57,65,77,83",
+  "postCsv": "sid,Q01,Q02,Q03,Q04,Q05,Q06,Q07,Q08,Q09,Q10,Q11,Q12,t_Q01,t_Q02,t_Q03,t_Q04,t_Q05,t_Q06,t_Q07,t_Q08,t_Q09,t_Q10,t_Q11,t_Q12\nS01,1,0,1,0,1,0,0,1,0,1,0,0,23,44,45,61,43,66,69,64,57,56,79,83\nS02,1,1,0,1,0,1,1,1,1,1,1,1,29,34,58,43,50,55,52,60,47,57,60,67\nS03,1,0,1,1,1,1,1,1,1,1,0,1,28,45,39,46,34,52,49,64,48,53,76,71\nS04,1,1,1,1,0,0,1,1,1,1,1,0,30,39,46,53,59,65,57,68,49,61,68,87\nS05,1,1,1,1,1,1,1,1,1,0,1,0,26,31,38,48,41,55,49,59,50,69,62,85\nS06,1,1,1,1,0,1,1,0,1,0,1,1,30,35,40,44,54,45,49,72,47,69,61,69\nS07,0,1,1,0,0,0,1,1,1,0,0,0,47,36,41,70,55,66,63,67,54,75,81,88\nS08,1,1,1,1,1,1,1,0,0,1,0,0,25,38,41,54,41,57,61,76,68,59,78,87\nS09,0,1,1,1,1,1,1,1,1,1,1,1,37,35,43,45,36,56,57,65,45,57,64,68\nS10,1,1,1,0,1,0,1,1,1,0,0,0,27,37,38,62,37,62,53,64,47,68,79,80\nS11,1,0,1,1,0,0,0,0,0,1,0,0,31,50,42,58,56,72,77,79,71,63,85,89\nS12,1,0,0,0,0,0,0,0,0,0,0,0,27,50,63,75,57,77,81,82,71,78,84,98\nS13,0,1,1,1,1,1,0,1,1,1,0,0,34,27,38,46,39,51,66,54,40,54,75,74\nS14,1,1,1,1,0,1,1,0,1,0,0,1,25,34,45,52,50,57,60,75,45,69,75,74\nS15,0,1,1,0,0,0,0,0,0,0,0,0,39,29,44,65,48,68,68,73,63,66,71,80\nS16,1,0,1,1,1,1,1,1,1,0,1,0,31,57,48,57,41,61,57,71,53,74,69,91\nS17,1,1,0,0,1,1,0,0,1,0,1,1,30,28,52,62,35,50,61,72,45,61,60,67\nS18,1,1,1,1,0,1,0,0,1,1,0,1,30,34,36,48,52,51,68,80,42,51,81,68\nS19,1,0,0,1,0,0,0,1,1,1,0,1,19,44,42,44,39,57,61,48,41,42,69,58\nS20,0,1,1,0,1,1,1,1,1,1,1,1,42,28,41,61,35,49,59,64,49,52,66,71\nS21,1,1,1,1,0,1,1,0,1,1,1,0,25,27,33,47,47,48,56,73,45,45,59,76\nS22,1,0,0,1,1,0,1,0,0,1,0,0,30,51,55,46,35,71,56,74,63,50,78,87\nS23,1,0,0,1,1,1,1,1,0,1,0,0,27,55,64,53,43,63,66,68,71,60,91,95\nS24,0,1,1,1,1,0,1,1,0,0,0,1,43,33,48,52,39,73,59,69,60,72,82,80\nS25,1,1,1,0,1,0,1,0,1,0,0,0,23,38,42,67,34,62,52,72,48,62,79,87\nS26,1,1,1,1,1,0,0,1,1,0,0,1,27,25,42,41,38,64,68,53,39,58,72,63\nS27,1,1,1,0,1,0,1,1,1,0,0,0,27,23,38,53,31,54,49,48,41,57,68,70\nS28,1,1,0,1,1,1,0,0,1,0,1,0,28,36,50,46,40,54,64,72,42,62,64,85\nS29,1,1,1,0,1,1,0,1,1,0,1,0,26,28,43,62,38,50,67,60,48,72,67,84\nS30,1,0,1,0,1,1,0,0,1,0,1,0,31,49,42,65,39,47,69,71,46,66,62,81",
+  "interestCsv": "sid,i_数与代数探究,i_图形与几何,i_生活中的数学,i_数学史与故事,i_数学游戏与竞赛,i_数学阅读,q_auto,q_ext\nS01,5,3,4,3,4,4,2,1\nS02,4,3,4,3,4,2,1,1\nS03,4,5,4,3,4,4,2,1\nS04,3,4,4,4,5,3,2,1\nS05,5,3,5,2,4,4,1,2\nS06,4,4,3,2,4,4,1,2\nS07,2,3,3,3,3,3,1,1\nS08,3,3,5,2,3,3,1,1\nS09,5,3,4,3,3,4,2,1\nS10,3,3,4,3,3,4,0,2\nS11,4,3,3,3,3,1,1,1\nS12,3,3,4,4,4,2,2,0\nS13,4,3,4,3,2,3,3,2\nS14,4,3,3,3,3,3,2,0\nS15,5,5,4,5,3,5,1,2\nS16,4,2,4,3,3,3,3,2\nS17,4,3,5,2,2,3,1,1\nS18,4,4,5,4,3,4,3,2\nS19,5,4,4,5,4,4,3,2\nS20,5,4,4,5,2,2,2,2\nS21,4,4,5,4,2,4,1,1\nS22,3,2,4,4,3,4,2,0\nS23,3,3,4,2,4,3,1,1\nS24,5,5,5,4,3,3,3,2\nS25,4,4,3,3,3,4,1,2\nS26,4,3,4,3,3,4,1,1\nS27,3,4,5,3,4,3,2,2\nS28,3,3,3,3,2,3,2,2\nS29,3,3,4,2,4,3,1,2\nS30,4,4,4,4,2,2,1,1",
+  "confusionCsv": "sid,text\nS01,函数关系识别这道题我漏看了条件，做完才发现。\nS02,看课本还是不懂k的符号与倾斜方向是什么意思。\nS03,函数关系识别的图表我没看全就下笔了。\nS04,由图象求解析式和之前学的知识联系不起来。\nS05,做描点法画图象时步骤写反了，不知道先求哪一个。\nS06,看课本还是不懂常量与变量辨识是什么意思。\nS07,课堂例题懂了，待定系数法求解析式换个说法就做不出来。\nS08,函数关系识别的图表我没看全就下笔了。\nS09,水费计费建模换成生活里的情境我就不会了。\nS10,方法我背下来了，可是一换数字就不会用b的意义与平移了。\nS11,做正比例函数解析式时步骤写反了，不知道先求哪一个。\nS12,水费计费建模和之前学的知识联系不起来。\nS13,我不太清楚函数概念判断到底在问什么，概念没弄明白。\nS14,做待定系数法求解析式时步骤写反了，不知道先求哪一个。\nS15,水费计费建模换成生活里的情境我就不会了。\nS16,做描点法画图象时步骤写反了，不知道先求哪一个。\nS17,方法我背下来了，可是一换数字就不会用待定系数法求解析式了。\nS18,看课本还是不懂变量与常量是什么意思。\nS19,看课本还是不懂k的符号与倾斜方向是什么意思。\nS20,水费计费建模换成生活里的情境我就不会了。\nS21,b的意义与平移换成生活里的情境我就不会了。\nS22,水费计费建模和之前学的知识联系不起来。\nS23,做描点法画图象时步骤写反了，不知道先求哪一个。\nS24,变量与常量的定义我记混了，分不清几个概念。\nS25,b的意义与平移换成生活里的情境我就不会了。\nS26,函数概念判断的定义我记混了，分不清几个概念。\nS27,待定系数法求解析式这道题我会列式子，但算到最后一步总出错。\nS28,做由图象求解析式时步骤写反了，不知道先求哪一个。\nS29,b的意义与平移换成生活里的情境我就不会了。\nS30,做正比例函数解析式时步骤写反了，不知道先求哪一个。",
+  "fiasSeq": "2,1,1,9,5,1,8,9,9,2,8,10,4,9,9,2,9,9,10,2,4,5,4,3,3,4,9,2,5,10,9,2,3,5,9,4,4,4,4,5,9,5,5,8,5,5,9,5,5,5,9,2,5,4,4,4,10,4,5,8,5,5,5,4,5,4,4,5,5,8,5,4,4,5,5,8,8,5,4,6,4,7,6,6,4,10,4,9,7,8,10,6,6,9,4,10,8,10,4,7,10,10,8,4,9,5,9,3,8,9,3,9,5,8",
+  "fiasSegments": [
+    {
+      "name": "导入",
+      "size": 14
+    },
+    {
+      "name": "探究",
+      "size": 40
+    },
+    {
+      "name": "讲授",
+      "size": 26
+    },
+    {
+      "name": "练习",
+      "size": 22
+    },
+    {
+      "name": "小结",
+      "size": 12
+    }
+  ],
+  "snsCsv": "from,to,weight\nT,S01,3\nS01,T,3\nT,S02,5\nT,S03,4\nT,S04,4\nT,S05,3\nT,S06,3\nS06,T,2\nT,S07,3\nS07,T,2\nT,S08,4\nT,S09,3\nS09,T,1\nT,S10,2\nT,S11,2\nT,S12,1\nS12,T,1\nT,S13,4\nT,S14,3\nT,S15,3\nT,S16,3\nT,S17,3\nT,S18,5\nS18,T,5\nT,S19,5\nT,S20,4\nT,S21,4\nT,S22,3\nS22,T,2\nT,S23,2\nT,S24,4\nT,S25,3\nT,S26,2\nT,S27,3\nT,S28,2\nS28,T,2\nT,S29,3\nT,S30,2\nS30,T,2\nS02,S20,2\nS03,S14,1\nS05,S28,1\nS06,S14,1\nS06,S25,1\nS07,S15,1\nS07,S29,1\nS09,S15,2\nS09,S24,2\nS10,S23,1\nS13,S02,3\nS14,S28,3\nS15,S19,2\nS15,S30,3\nS16,S30,1\nS16,S11,2\nS17,S25,3\nS17,S22,2\nS18,S30,2\nS19,S01,1\nS20,S08,3\nS22,S30,3\nS23,S29,3\nS23,S08,3\nS25,S07,1\nS25,S13,2\nS26,S09,2\nS26,S05,1\nS28,S18,2\nS28,S10,1\nS29,S02,2\nS29,S19,2",
+  "interestTopics": [
+    "数与代数探究",
+    "图形与几何",
+    "生活中的数学",
+    "数学史与故事",
+    "数学游戏与竞赛",
+    "数学阅读"
+  ],
+  "nStudents": 30
+};
+
+</script>
+<!-- assets/app.js -->
+<script>
+/* =============================================================================
+ * app.js —— 界面逻辑：采集 → 分析 → 可视化
+ * ========================================================================== */
+(function () {
+  'use strict';
+  var EP = window.EP, CH = EP.charts, PL = EP.pipeline, T = EP.text;
+  var $ = function (id) { return document.getElementById(id); };
+  var round = T.round, esc = CH.esc, fmt = CH.fmt;
+
+  var state = { result: null, confMode: 'freq', ready: false };
+  window.__EP_STATE = state;   // 便于控制台调试与二次开发
+
+  /* ------------------------------------------------------------ 基础工具 */
+  function toast(msg) {
+    var el = document.querySelector('.toast');
+    if (!el) { el = document.createElement('div'); el.className = 'toast'; document.body.appendChild(el); }
+    el.textContent = msg; el.classList.add('show');
+    clearTimeout(el._t); el._t = setTimeout(function () { el.classList.remove('show'); }, 2200);
+  }
+  function pct(x, d) { return (x === null || x === undefined) ? '—' : (x * 100).toFixed(d === undefined ? 1 : d) + '%'; }
+  function chartBox(title, cap, svg, hint, full) {
+    return '<div class="chart' + (full ? ' full' : '') + '"><h4>' + title + '</h4><p class="cap">' + cap + '</p>' +
+      svg + (hint ? '<div class="hint">' + hint + '</div>' : '') + '</div>';
+  }
+
+  /* ============================================================ 载入示例 */
+  function loadSample() {
+    var S = window.EP_SAMPLE;
+    var L = S.lesson;
+    $('fTitle').value = L.title; $('fSubject').value = L.subject;
+    $('fGrade').value = L.grade; $('fUnit').value = L.unit;
+    $('fMode').value = L.teacherMode;
+    $('fPlan').value = S.lessonPlan;
+    $('fStd').value = S.standards.join('\n');
+    $('fItems').value = S.itemsCsv;
+    $('fResp').value = S.respCsv;
+    $('fPost').value = S.postCsv;
+    $('fInterest').value = S.interestCsv;
+    $('fConf').value = S.confusionCsv;
+    $('fFias').value = S.fiasSeq;
+    $('fSns').value = S.snsCsv;
+    window._segData = S.segments.map(function (s) { return { name: s.name, minutes: s.minutes, key: s.key }; });
+    window._fiasSeg = S.fiasSegments;
+    renderSegTable();
+    $('lessonBadge').textContent = L.grade + ' · ' + L.subject + ' · ' + L.title;
+    renderChecklist();
+    toast('已载入示例数据（模拟数据，学号匿名）');
+  }
+
+  function renderSegTable() {
+    var tb = $('segTable').querySelector('tbody');
+    tb.innerHTML = '';
+    (window._segData || []).forEach(function (s, i) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><input type="text" value="' + esc(s.name) + '" data-i="' + i + '" data-k="name"></td>' +
+        '<td><input type="number" min="0" step="1" value="' + s.minutes + '" data-i="' + i + '" data-k="minutes"></td>' +
+        '<td style="text-align:center"><input type="checkbox" ' + (s.key ? 'checked' : '') + ' data-i="' + i + '" data-k="key"></td>' +
+        '<td><button class="mini" data-del="' + i + '">删除</button></td>';
+      tb.appendChild(tr);
+    });
+    tb.querySelectorAll('input').forEach(function (inp) {
+      inp.addEventListener('change', function () {
+        var i = +inp.dataset.i, k = inp.dataset.k;
+        window._segData[i][k] = inp.type === 'checkbox' ? inp.checked : (k === 'minutes' ? (+inp.value || 0) : inp.value);
+      });
+    });
+    tb.querySelectorAll('[data-del]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        window._segData.splice(+b.dataset.del, 1); renderSegTable();
+      });
+    });
+  }
+
+  function renderChecklist() {
+    var items = [
+      ['教师侧 · 教案 / 支持文献文本', $('fPlan').value.trim().length > 50],
+      ['教师侧 · 课程标准条目', $('fStd').value.trim().split('\n').length >= 3],
+      ['教师侧 · 教学环节与预计用时', (window._segData || []).length >= 3],
+      ['教师侧 · 教学模式自述', $('fMode').value.trim().length > 0],
+      ['学生侧 · 题项—知识点映射', PL.parseCsv($('fItems').value).rows.length >= 3],
+      ['学生侧 · 预习案作答矩阵', PL.parseCsv($('fResp').value).rows.length >= 5],
+      ['学生侧 · 学习兴趣量表', PL.parseCsv($('fInterest').value).rows.length >= 5],
+      ['学生侧 · 自主困惑（质性数据）', PL.parseCsv($('fConf').value).rows.length >= 3],
+      ['课中 · FIAS 编码序列（可选）', $('fFias').value.trim().length > 10],
+      ['课中 · 师生互动边表（可选）', PL.parseCsv($('fSns').value).rows.length >= 3],
+      ['课后 · 课后练习作答（可选）', PL.parseCsv($('fPost').value).rows.length >= 5]
+    ];
+    $('checklist').innerHTML = items.map(function (it) {
+      return '<li>' + (it[1] ? '<span class="pill green">已采集</span>' : '<span class="pill red">缺失</span>') +
+        ' ' + esc(it[0]) + '</li>';
+    }).join('');
+  }
+
+  /* ============================================================ 读取表单 */
+  function readForm() {
+    var itemsCsv = PL.parseCsv($('fItems').value);
+    var items = itemsCsv.rows.map(function (r) {
+      return { qid: r[0], kp: r[1], kpName: r[2], lit: r[3], main_confusion: r[4], text: r[5] || '' };
+    }).filter(function (it) { return it.qid; });
+
+    function readResp(text) {
+      var c = PL.parseCsv(text);
+      var sidIdx = c.header.indexOf('sid');
+      if (sidIdx < 0) sidIdx = 0;
+      var sids = c.rows.map(function (r) { return r[sidIdx]; });
+      var cols = items.map(function (it) { return c.header.indexOf(it.qid); });
+      var times = items.map(function (it) { return c.header.indexOf('t_' + it.qid); });
+      var M = c.rows.map(function (r) {
+        return cols.map(function (ci, j) {
+          var v = ci >= 0 ? parseInt(r[ci], 10) : 0;
+          return (v === 1 || v === 0) ? v : 0;
+        });
+      });
+      var TM = c.rows.map(function (r) {
+        return times.map(function (ti) { return ti >= 0 ? (parseFloat(r[ti]) || 0) : 0; });
+      });
+      return { sids: sids, M: M, TM: TM, missing: cols.filter(function (c2) { return c2 < 0; }).length };
+    }
+
+    var pre = readResp($('fResp').value);
+    var post = readResp($('fPost').value);
+    var ic = PL.parseCsv($('fInterest').value);
+    var interestNames = ic.header.slice(1);
+    var interest = ic.rows.map(function (r) {
+      return r.slice(1).map(function (v) { return parseFloat(v) || 0; });
+    });
+    var topics = interestNames.filter(function (n) { return n.indexOf('i_') === 0; })
+      .map(function (n) { return n.slice(2); });
+    if (!topics.length) topics = interestNames.slice(0, interestNames.length);
+
+    var cf = PL.parseCsv($('fConf').value);
+    var confMap = {};
+    cf.rows.forEach(function (r) { confMap[r[0]] = r.slice(1).join(','); });
+    var confusions = pre.sids.map(function (s) { return confMap[s] || ''; });
+
+    var sns = PL.parseCsv($('fSns').value).rows.map(function (r) {
+      return { from: r[0], to: r[1], weight: parseFloat(r[2]) || 1 };
+    }).filter(function (e) { return e.from && e.to; });
+
+    var fiasCodes = $('fFias').value.split(/[,\s]+/).map(function (x) { return parseInt(x, 10); })
+      .filter(function (x) { return x >= 1 && x <= 10; });
+
+    return {
+      lesson: {
+        title: $('fTitle').value, subject: $('fSubject').value, grade: $('fGrade').value,
+        unit: $('fUnit').value, teacherMode: $('fMode').value
+      },
+      standards: $('fStd').value.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 4; }),
+      lessonPlan: $('fPlan').value,
+      segments: (window._segData || []).slice(),
+      items: items,
+      sids: pre.sids,
+      resp: pre.M, times: pre.TM,
+      interest: interest, interestNames: interestNames, interestTopics: topics,
+      confusions: confusions,
+      post: post.M.length ? post.M : null,
+      fiasCodes: fiasCodes, fiasSegments: window._fiasSeg || [],
+      snsEdges: sns,
+      target: +$('pTarget').value, simThreshold: +$('pThr').value,
+      minD: +$('pMinD').value, loP: 0.15, hiP: 0.95,
+      topics: +$('pK').value, k: +$('pCluster').value,
+      minSup: +$('pSup').value, minConf: +$('pConf').value,
+      marginalThreshold: 0.18
+    };
+  }
+
+  /* ============================================================ 运行分析 */
+  function run() {
+    var inp;
+    try { inp = readForm(); } catch (e) { toast('读取采集数据失败：' + e.message); return; }
+    if (!inp.items.length) { toast('题项映射为空，无法分析'); return; }
+    if (!inp.resp.length) { toast('作答矩阵为空，无法分析'); return; }
+    var t0 = performance.now();
+    var res;
+    try { res = PL.analyse(inp); } catch (e) {
+      toast('分析失败：' + e.message); console.error(e.stack || e); return;
+    }
+    state.result = res; state.ready = true; state.input = inp;
+    renderAnalysis(res); renderViz(res); renderStages(res); renderComp(res);
+    toast('分析完成，用时 ' + Math.round(performance.now() - t0) + ' ms');
+  }
+
+  /* ============================================================ 分析页 */
+  function renderAnalysis(r) {
+    var t = r.teacher, s = r.student;
+    var pass = t.fourDims.filter(function (d) { return d.value >= d.target; }).length;
+    var badItems = s.flagged.filter(function (x) { return x.flag; });
+    var html = '<div class="card"><h2>课程预备阶段 · 分析结果概览</h2><div class="kpis">' +
+      kpi('教案—课标契合度', t.align, '', t.align >= 70 ? 'good' : (t.align >= 50 ? 'warn' : 'bad')) +
+      kpi('四维达标数', pass + '/4', '', pass >= 3 ? 'good' : (pass >= 2 ? 'warn' : 'bad')) +
+      kpi('重难点用时占比', pct(t.keyShare, 0), '', t.keyShare >= 0.5 ? 'good' : 'warn') +
+      kpi('班级预习正确率', pct(s.scoreRate, 1), '', s.scoreRate >= 0.5 ? 'good' : 'warn') +
+      kpi('可疑题项', badItems.length + ' / ' + s.items.length, '', badItems.length ? 'warn' : 'good') +
+      kpi('教学模式适配度', s.fit.overall, '', s.fit.overall >= 70 ? 'good' : (s.fit.overall >= 55 ? 'warn' : 'bad')) +
+      '</div>' + conclusion(t, s, pass, badItems) + '</div>';
+
+    /* ---- 教师侧：相似度矩阵 */
+    html += '<div class="card"><h3>教师侧 · 教学目标 × 课程标准 语义匹配矩阵</h3>' +
+      '<p class="lead">底色 = TF-IDF 余弦相似度（句级文本量级天然偏低，用于判断"哪条目标对应哪条课标"）；' +
+      '末行 = 课标条目的 <b>IDF 加权词条覆盖率</b>；契合度指数 ' + t.align + ' = 各条目覆盖率的均值 ×100。</p>' +
+      '<div style="overflow-x:auto"><table class="tbl compact"><thead><tr><th>教学目标 / 课标条目</th>' +
+      t.standards.map(function (_, j) { return '<th class="num">课标 ' + (j + 1) + '</th>'; }).join('') +
+      '<th class="num">最佳匹配</th></tr></thead><tbody>' +
+      t.objectives.map(function (o, i) {
+        return '<tr><td>' + esc(o.length > 40 ? o.slice(0, 40) + '…' : o) + '</td>' +
+          t.matrix[i].map(function (v) {
+            return '<td class="num" style="background:' + CH.ramp(v / 0.6, 'blue') + '">' + v.toFixed(3) + '</td>';
+          }).join('') +
+          '<td class="num"><b>' + t.objBest[i].toFixed(3) + '</b></td></tr>';
+      }).join('') +
+      '<tr><td><b>课标被匹配程度（余弦）</b></td>' + t.stdBest.map(function (v) {
+        return '<td class="num" style="background:' + CH.ramp(v / 0.6, 'blue') + '"><b>' + v.toFixed(3) + '</b></td>';
+      }).join('') + '<td></td></tr>' +
+      '<tr><td><b>课标词条覆盖率</b></td>' + t.stdCoverage.map(function (v) {
+        var ok = v >= (state.input ? state.input.simThreshold : 0.25);
+        return '<td class="num" style="background:' + CH.ramp(v, 'blue') + '">' +
+          (ok ? '<span class="pill green">' : '<span class="pill red">') + v.toFixed(3) + '</span></td>';
+      }).join('') + '<td></td></tr>' +
+      '</tbody></table></div>' +
+      '<p class="cap" style="margin-top:8px">课标条目前 6 字：' +
+      t.standards.map(function (x, j) { return '<span class="tag">课标' + (j + 1) + ' ' + esc(x.slice(0, 6)) + '…</span>'; }).join('') +
+      '</p></div>';
+
+    /* ---- 教师侧：四维 + 深度 + 素养 + 用时 */
+    html += '<div class="grid2"><div class="card"><h3>教师侧 · 四维画像得分</h3><table class="tbl">' +
+      '<thead><tr><th>维度</th><th class="num">得分</th><th class="num">达标线</th><th>判定</th><th>计算说明</th></tr></thead><tbody>' +
+      t.fourDims.map(function (d) {
+        var ok = d.value >= d.target;
+        return '<tr' + (ok ? '' : ' class="warn"') + '><td><b>' + d.label + '</b></td><td class="num">' + d.value +
+          '</td><td class="num">' + d.target + '</td><td>' + (ok ? '<span class="pill green">达标</span>' : '<span class="pill red">未达标</span>') +
+          '</td><td>' + esc(d.hint) + '</td></tr>';
+      }).join('') + '</tbody></table>' +
+      '<h3 style="margin-top:14px">布鲁姆认知层级命中（知识深度）</h3><table class="tbl compact"><thead><tr><th>目标句</th><th class="num">层级</th><th>层级名</th></tr></thead><tbody>' +
+      t.depth.hits.map(function (h2) {
+        return '<tr><td>' + esc(h2.text.length > 34 ? h2.text.slice(0, 34) + '…' : h2.text) + '</td><td class="num">' +
+          (h2.level || '—') + '</td><td>' + h2.levelName + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+
+    html += '<div class="card"><h3>教师侧 · 素养覆盖与重难点用时</h3>' +
+      '<p class="lead">多元素养活动：命中 ' + t.literacy.count + ' 类（词典共 ' + t.literacy.total + ' 项）</p>' +
+      '<p>' + t.literacy.hit.map(function (h2) { return '<span class="pill blue">' + esc(h2.name) + ' ×' + h2.count + '</span>'; }).join(' ') + '</p>' +
+      '<table class="tbl compact"><thead><tr><th>教学环节</th><th class="num">用时</th><th class="num">占比</th><th>属性</th></tr></thead><tbody>' +
+      t.segments.map(function (s2) {
+        return '<tr><td>' + esc(s2.name) + '</td><td class="num">' + s2.minutes + ' 分钟</td><td class="num">' +
+          pct(s2.share, 1) + '</td><td>' + (s2.key ? '<span class="pill orange">重难点</span>' : '<span class="pill gray">常规</span>') + '</td></tr>';
+      }).join('') +
+      '<tr><td><b>合计</b></td><td class="num"><b>' + t.segTotal + '</b></td><td class="num">100%</td>' +
+      '<td>重难点合计 <b>' + pct(t.keyShare, 1) + '</b></td></tr>' +
+      '</tbody></table>' +
+      (t.lda ? '<h3 style="margin-top:14px">主题模型 LDA（K=' + t.lda.K + '）</h3>' +
+        t.lda.topics.map(function (tp) {
+          return '<p style="margin:.3em 0"><span class="pill gray">主题 ' + (tp.id + 1) + '（' + tp.weight + ' 词）</span> ' +
+            tp.top.slice(0, 6).map(function (w) { return esc(w.w); }).join('、') + '</p>';
+        }).join('') : '') +
+      '</div></div>';
+
+    /* ---- 学生侧：CTT + IRT */
+    html += '<div class="card"><h3>学生侧 · 题项质量（CTT + IRT 2PL）</h3>' +
+      '<p class="lead">IRT 采用 Bock-Aitkin MML-EM（' + s.irt.iters + ' 次迭代，对数似然 ' + s.irt.loglik +
+      '）；θ 为 EAP 估计；区分度下限 ' + state.input.minD + '，难度区间 [0.15, 0.95]。</p>' +
+      '<div style="overflow-x:auto"><table class="tbl compact"><thead><tr>' +
+      ['题号', '知识点', '素养', '难度P', '区分度r', '分组D', '离散度', 'IRT a', 'IRT b', '信息量', '判定'].map(function (x) { return '<th>' + x + '</th>'; }).join('') +
+      '</tr></thead><tbody>' +
+      s.items.map(function (it, j) {
+        var c = s.ctt[j], ir = s.irt.items[j], f = s.flagged[j];
+        return '<tr' + (f.flag ? ' class="warn"' : '') + '><td><b>' + esc(it.qid) + '</b></td><td>' + esc(it.kpName) +
+          '</td><td>' + esc(it.lit) + '</td><td class="num">' + c.difficultyP.toFixed(2) + '</td><td class="num">' +
+          c.discrimination.toFixed(3) + '</td><td class="num">' + c.D.toFixed(2) + '</td><td class="num">' + c.sd.toFixed(3) +
+          '</td><td class="num">' + ir.a.toFixed(2) + '</td><td class="num">' + ir.b.toFixed(2) + '</td><td class="num">' +
+          ir.info.toFixed(2) + '</td><td>' + (f.flag ? '<span class="pill red">' + esc(f.reasons[0]) + '</span>' : '<span class="pill green">合格</span>') + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      (function () {
+        var bad = s.flagged.filter(function (x) { return x.flag; });
+        if (!bad.length) return '<div class="conclusion">全部题项通过质量检验，可直接用于学情诊断。</div>';
+        return '<div class="conclusion"><b>需人工复核的题项：</b>' + bad.map(function (x) {
+          return x.qid + '（' + x.reasons.join('；') + '）';
+        }).join('；') + '。建议修改题干表述、核查标准答案或调整题项难度后重新采集。</div>';
+      })() + '</div>';
+
+    /* ---- 掌握概率 + 聚类 + 困惑 */
+    html += '<div class="grid2"><div class="card"><h3>学生侧 · 知识点掌握概率（IRT）</h3><table class="tbl compact">' +
+      '<thead><tr><th>知识点</th><th class="num">实测正确率</th><th class="num">模型掌握概率</th><th>判定</th></tr></thead><tbody>' +
+      s.kps.map(function (k) {
+        var lv = k.classMastery >= 0.7 ? '<span class="pill green">已掌握</span>' :
+          (k.classMastery >= 0.45 ? '<span class="pill orange">部分掌握</span>' : '<span class="pill red">薄弱</span>');
+        return '<tr><td>' + esc(k.name) + '</td><td class="num">' + pct(k.observed, 1) + '</td><td class="num"><b>' +
+          pct(k.classMastery, 1) + '</b></td><td>' + lv + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+
+    html += '<div class="card"><h3>学生侧 · 学习兴趣聚类（K-Means，k=' + state.input.k + '）</h3>' +
+      '<p class="lead">轮廓系数 ' + s.cluster.silhouette + '，组内平方和 ' + s.cluster.inertia + '</p>' +
+      '<table class="tbl compact"><thead><tr><th>学习类型</th><th class="num">人数</th><th>中心（' +
+      s.interestNames.join(' / ') + '）</th></tr></thead><tbody>' +
+      s.types.map(function (tp) {
+        return '<tr><td><b>' + tp.name + '</b></td><td class="num">' + tp.size + '</td><td style="font-size:11.5px">' +
+          tp.centroid.join(', ') + '</td></tr>';
+      }).join('') + '</tbody></table>' +
+      '<h3 style="margin-top:14px">教学模式 × 学习类型 适配度</h3><table class="tbl compact"><thead><tr><th>识别到的模式</th>' +
+      s.fit.rows[0].parts.map(function (p) { return '<th class="num">' + p.name + '（' + p.n + '人）</th>'; }).join('') +
+      '<th class="num">加权适配度</th></tr></thead><tbody>' +
+      s.fit.rows.map(function (row) {
+        return '<tr><td>' + esc(row.mode) + '式</td>' + row.parts.map(function (p) {
+          return '<td class="num">' + p.value + '</td>';
+        }).join('') + '<td class="num"><b>' + row.fit + '</b></td></tr>';
+      }).join('') + '<tr><td><b>综合</b></td><td colspan="' + s.fit.rows[0].parts.length + '"></td><td class="num"><b>' +
+      s.fit.overall + '</b></td></tr></tbody></table>' +
+      '<h3 style="margin-top:14px">四类困惑编码统计</h3><p>' +
+      s.confKeys.map(function (k, i) { return '<span class="pill gray">' + esc(k) + ' ' + s.confTotal[i] + ' 人次</span>'; }).join(' ') +
+      '</p></div></div>';
+
+    $('analysisOut').innerHTML = html;
+  }
+
+  function kpi(k, v, u, cls) {
+    return '<div class="kpi ' + (cls || '') + '"><div class="k">' + k + '</div><div class="v">' + v +
+      '<span class="u">' + (u || '') + '</span></div></div>';
+  }
+
+  function conclusion(t, s, pass, badItems) {
+    var lines = [];
+    lines.push(t.align >= 70 ? '教案目标与课程标准<b>高度契合</b>' :
+      (t.align >= 50 ? '教案与课标<b>基本契合</b>，建议复核未覆盖条目' : '教案与课标<b>契合度偏低</b>，需重写目标表述'));
+    var weak = t.fourDims.filter(function (d) { return d.value < d.target; });
+    lines.push(weak.length ? '未达标维度：<b>' + weak.map(function (d) { return d.label + '(' + d.value + ')'; }).join('、') + '</b>'
+      : '知识种类 / 深度 / 广度 / 平衡性<b>四项全部达标</b>');
+    lines.push(t.keyShare >= 0.5 ? '重难点环节用时占比 <b>' + pct(t.keyShare, 0) + '</b>，时间配置合理'
+      : '重难点环节用时仅 <b>' + pct(t.keyShare, 0) + '</b>，建议压缩常规环节');
+    var weakest = s.kps.slice().sort(function (a, b) { return a.classMastery - b.classMastery; }).slice(0, 2);
+    lines.push('前置知识薄弱点：<b>' + weakest.map(function (k) { return k.name + '（' + pct(k.classMastery, 0) + '）'; }).join('、') + '</b>');
+    var dom = s.types[0];
+    lines.push('班级以<b>' + dom.name + '</b>为主（' + dom.size + ' 人），当前教学模式适配度 <b>' + s.fit.overall + '</b>');
+    if (badItems.length) lines.push('共 <b>' + badItems.length + '</b> 道题项需复核后再用于诊断');
+    return '<div class="conclusion">' + lines.map(function (x, i) { return (i + 1) + '. ' + x + '；'; }).join(' ') +
+      '<br><span style="color:#2f855a;font-weight:600">（以上结论由阈值规则生成，非生成式文本）</span></div>';
+  }
+
+  /* ============================================================ 可视化页 */
+  function renderViz(r) {
+    var t = r.teacher, s = r.student;
+    var html = '<div class="card"><h2>课程预备阶段可视化面板</h2>' +
+      '<p class="lead">对应论文图 2：教师画像（克利夫兰点图 + 用时结构）与学生画像（困惑热力图 + 错因构成 + 兴趣分布 + 掌握概率）。</p></div>';
+    html += '<div class="chart-grid">';
+
+    // 1 克利夫兰点图
+    html += chartBox('① 教师画像 · 四维达标点图（克利夫兰点图）',
+      '知识种类 / 知识深度 / 知识广度 / 分布平衡性，红色虚线为达标线 ' + t.fourDims[0].target,
+      CH.cleveland(t.fourDims, { target: t.fourDims[0].target, width: 660, title: '' }),
+      '<b>怎么读：</b>圆点越靠右越好；落在达标线左侧即未达标。<b>怎么做：</b>' +
+      (t.fourDims.filter(function (d) { return d.value < d.target; }).map(function (d) { return d.label; }).join('、') || '四项达标') +
+      '——知识种类不足就补充被遗漏的知识点，深度不足就把"说出/记住"改成"分析/建模"，广度不足就补挂课标条目，平衡性低就重排各环节比重。');
+
+    // 2 环节用时结构
+    html += chartBox('② 教师画像 · 教学环节用时结构',
+      '堆叠占比，橙色为重难点环节；重难点合计 ' + pct(t.keyShare, 1),
+      CH.stackedBar([{
+        label: '本课', parts: t.segments.map(function (sg) {
+          return { name: sg.name, value: sg.minutes, color: sg.key ? CH.C.orange : CH.C.blue };
+        })
+      }], t.segments.map(function (sg) { return sg.name; }), { mode: 'percent', padL: 60, padR: 30, width: 660, barH: 40 }),
+      '<b>怎么读：</b>橙色越长，时间越集中在重难点。<b>怎么做：</b>占比低于一半时，压缩导入与小结，把时间还给探究与例题。');
+
+    // 3 困惑热力图
+    var mat = state.confMode === 'freq' ? s.confMat : s.confSev;
+    html += chartBox('③ 学生画像 · 四类困惑 × 知识点热力图（' + (state.confMode === 'freq' ? '频次' : '严重度') + '）',
+      '<div class="switch"><button data-mode="freq" class="' + (state.confMode === 'freq' ? 'on' : '') + '">频次</button>' +
+      '<button data-mode="sev" class="' + (state.confMode === 'sev' ? 'on' : '') + '">严重度</button></div>',
+      CH.heatmap(mat, s.kps.map(function (k) { return k.name; }), s.confKeys,
+        { kind: 'red', width: 660, padL: 128, cellW: 108, cellH: 30, unit: state.confMode === 'freq' ? ' 人次' : '' }),
+      '<b>怎么读：</b>颜色越红，该知识点上该类困惑越集中。<b>怎么做：</b>概念理解不清→课前补认知锚点；' +
+      '方法应用错误→课上拆步骤示范；审题遗漏→训练圈画条件；知识迁移困难→增加变式与生活情境。', true);
+
+    // 4 错因构成
+    var confParts = s.confKeys.map(function (k, i) {
+      return { name: k, value: s.confTotal[i], color: CH.PALETTE[i] };
+    });
+    html += chartBox('④ 学生画像 · 错因构成（环形图）',
+      '四类困惑人次占比，合计 ' + s.confTotal.reduce(function (a, b) { return a + b; }, 0) + ' 人次',
+      CH.donut(confParts, { width: 300, height: 250, centerLabel: '困惑人次' }),
+      '<b>怎么读：</b>占比最大者为本课主要认知障碍类型。');
+
+    html += chartBox('⑤ 学生画像 · 错因构成（按知识点堆叠）',
+      '每行一个知识点，色段为四类困惑占比',
+      CH.stackedBar(s.kps.map(function (k, ki) {
+        return {
+          label: k.name, parts: s.confKeys.map(function (ck, ci) {
+            return { name: ck, value: s.confMat[ki][ci], color: CH.PALETTE[ci] };
+          })
+        };
+      }), s.confKeys, { mode: 'percent', width: 660, padL: 128, padR: 20, barH: 22, gap: 8 }),
+      '<b>怎么读：</b>同一知识点内若某一色段独大，说明障碍类型集中；若分散，说明需要个别化补偿。');
+
+    // 6 兴趣主题
+    html += chartBox('⑥ 学生画像 · 学习兴趣主题频次（评分 ≥ 4 的人数）',
+      '水平条形图，反映班级兴趣分布',
+      CH.hbar(s.topicFreq, { width: 660, padL: 128, unit: '' }),
+      '<b>怎么读：</b>最长的条就是本班最买账的切入点。<b>怎么做：</b>把最热主题做成本课情境载体，把最冷主题放到拓展任务里。');
+
+    // 7 掌握概率棒棒糖
+    html += chartBox('⑦ 学生画像 · 知识点掌握概率（棒棒糖图）',
+      'IRT 模型估计的班级掌握概率，绿 ≥70% / 橙 45–70% / 红 <45%',
+      CH.lollipop(s.kps.map(function (k) { return { label: k.name, value: k.classMastery }; }), { width: 660, padL: 128 }),
+      '<b>怎么读：</b>低于 45% 的知识点必须在课上重新教，不能只靠练习补救。', true);
+
+    // 8 能力—掌握概率散点
+    var pts = s.ability.map(function (th, i) {
+      return { x: th, y: T.mean(s.kps.map(function (k) { return k.perStudent[i]; })), label: s.sids[i], r: 4.6 };
+    });
+    html += chartBox('⑧ 学生画像 · 能力 θ × 综合掌握概率（散点 + 班级 ICC）',
+      '横轴 EAP 能力估计，纵轴各知识点平均掌握概率；曲线为能力—掌握概率关系',
+      CH.scatter(pts, {
+        width: 660, height: 300, xMin: -3, xMax: 3, yMin: 0, yMax: 1, xLabel: '能力 θ（标准分）',
+        lineFn: function (x) {
+          return T.mean(s.irt.items.map(function (it) { return EP.psych.logistic(it.a, it.b, x); }));
+        }
+      }),
+      '<b>怎么读：</b>左侧下方是需要重点帮扶的学生；横轴中段密集说明班级分化不大，两端拉长说明两极分化。', true);
+
+    html += '</div>';
+    $('vizOut').innerHTML = html;
+    $('vizOut').querySelectorAll('.switch button').forEach(function (b) {
+      b.addEventListener('click', function () { state.confMode = b.dataset.mode; renderViz(state.result); });
+    });
+  }
+
+  /* ============================================================ 课中课后 */
+  function renderStages(r) {
+    var html = '';
+    if (r.inClass) {
+      var f = r.inClass.fias, sn = r.inClass.sns;
+      html += '<div class="card"><h2>课堂教学阶段 · 过程证据面板</h2>' +
+        '<div class="kpis">' +
+        kpi('教师言语比率', pct(f.ratios.teacherTalk, 1), '', f.ratios.teacherTalk > 0.7 ? 'bad' : 'good') +
+        kpi('学生言语比率', pct(f.ratios.studentTalk, 1), '', f.ratios.studentTalk >= 0.3 ? 'good' : 'warn') +
+        kpi('安静或混乱', pct(f.ratios.quiet, 1), '', f.ratios.quiet > 0.15 ? 'warn' : 'good') +
+        kpi('间接/直接比 I/D', f.ratios.ID, '', f.ratios.ID >= 1 ? 'good' : 'warn') +
+        kpi('网络密度', sn.density, '', '') +
+        kpi('边缘参与者', sn.marginal.length + ' 人', '', sn.marginal.length ? 'warn' : 'good') +
+        '</div></div>';
+      html += '<div class="chart-grid">';
+      html += chartBox('课堂互动时序（每格 3 秒）', '颜色区分教师主导 / 学生主导 / 沉默混乱',
+        CH.timeline(state.input.fiasCodes, { width: 1000 }),
+        '<b>怎么读：</b>连续灰色段是"冷场"，连续红/黄段是教师独白。<b>怎么做：</b>把独白段切成"提问—应答"链。', true);
+      html += chartBox('改进版 FIAS 互动迁移矩阵', '对角线为持续区；4→8 / 4→9 为提问—应答链',
+        CH.fiasMatrix(f, {}),
+        '<b>怎么读：</b>4→9 频次高说明提问激发了主动表达；10 行高处说明提问后常冷场。', true);
+      html += chartBox('课堂言语比率结构', '教师 / 学生 / 沉默混乱占比',
+        CH.donut([
+          { name: '教师言语', value: f.ratios.teacherTalk * 100, color: CH.C.orange },
+          { name: '学生言语', value: f.ratios.studentTalk * 100, color: CH.C.green },
+          { name: '安静或混乱', value: f.ratios.quiet * 100, color: CH.C.gray }
+        ], { width: 300, height: 250, centerLabel: '言语构成' }), '');
+      html += chartBox('师生互动网络拓扑', '节点半径映射中心度，灰色虚线圈为边缘参与者',
+        CH.network(sn, {}),
+        '<b>怎么读：</b>边缘参与者几乎不与教师连线。<b>怎么做：</b>下一课把这些学号放入提问名单与小组长轮换。');
+      html += '</div>';
+      html += '<div class="card"><h3>边缘参与者名单（进入下一课提问设计与分组安排）</h3><p>' +
+        (sn.marginal.length ? sn.marginal.map(function (m) { return '<span class="pill red">' + m + '</span>'; }).join(' ')
+          : '<span class="pill green">无</span>') + '</p></div>';
+    } else {
+      html += '<div class="card"><div class="empty">未采集 FIAS 编码序列或互动边表（可选数据）。</div></div>';
+    }
+
+    if (r.after) {
+      var a = r.after;
+      html += '<div class="card"><h2>课程延伸阶段 · 学习成效诊断面板</h2><div class="kpis">' +
+        kpi('课后正确率', pct(a.postRate, 1), '', '') +
+        kpi('知识留存率（BKT）', a.retention === null ? '—' : pct(a.retention, 1), '', a.retention >= 0.6 ? 'good' : 'warn') +
+        kpi('平均掌握增益', pct(T.mean(a.slopes.map(function (s2) { return s2.to - s2.from; })), 1), '', '') +
+        kpi('强关联规则', a.rules.rules.length + ' 条', '', '') +
+        '</div></div>';
+      html += '<div class="chart-grid">';
+      html += chartBox('知识点掌握率变化（斜率图）', '从课前预习到课后练习的班级平均掌握率',
+        CH.slope(a.slopes, { width: 660, padL: 128, leftLabel: '课前', rightLabel: '课后' }),
+        '<b>怎么读：</b>下滑的知识点说明课上没讲透或练习设计有偏。<b>怎么做：</b>下滑项在下一课开头做 5 分钟回顾。');
+      html += chartBox('BKT 知识追踪 · 各知识点掌握概率', '课前 → 课后的潜在掌握概率（贝叶斯知识追踪）',
+        CH.lollipop((a.kpBkt || []).map(function (k) { return { label: k.name, value: k.post, note: '增益 ' + Math.round(k.gain * 100) }; }),
+          { width: 660, padL: 128 }),
+        '<b>怎么读：</b>增益小但课前低的知识点＝补偿教学未生效。', true);
+      html += chartBox('错题损失瀑布图', '从理想作答 100% 出发，逐项扣减四类错因损失，落到实际课后正确率',
+        CH.waterfall(a.waterfall, { width: 660, height: 320 }),
+        '<b>怎么读：</b>最长的红色柱就是最该优先解决的认知根源。', true);
+      html += '</div>';
+      html += '<div class="card"><h3>错题关联规则（Apriori，minSup=' + a.rules.minSup + '，minConf=' + a.rules.minConf + '）</h3>' +
+        (a.rules.rules.length ? '<table class="tbl compact"><thead><tr><th>前项（错）</th><th>后项（错）</th>' +
+          '<th class="num">支持度</th><th class="num">置信度</th><th class="num">提升度</th></tr></thead><tbody>' +
+          a.rules.rules.slice(0, 18).map(function (rr) {
+            return '<tr><td>' + esc(rr.antecedent.join(' + ')) + '</td><td><b>' + esc(rr.consequent.join(' + ')) +
+              '</b></td><td class="num">' + rr.support.toFixed(3) + '</td><td class="num">' + rr.confidence.toFixed(3) +
+              '</td><td class="num"><b>' + (rr.lift === null ? '—' : rr.lift.toFixed(2)) + '</b></td></tr>';
+          }).join('') + '</tbody></table>'
+          : '<div class="empty">当前阈值下未挖掘到强关联规则，可降低 minSup 后重算。</div>') +
+        '<div class="conclusion"><b>怎么用：</b>置信度高的规则说明"错 A 必错 B"，其公共前项即是共性错误的认知根源，应在下一课集中突破。</div></div>';
+    }
+    $('stagesOut').innerHTML = html || '<div class="empty">请先运行分析。</div>';
+  }
+
+  /* ============================================================ 三阶段综合 */
+  function renderComp(r) {
+    var c = r.comprehensive;
+    var html = '<div class="card"><h2>三阶段综合评判 · 驱动下一课改进</h2>' +
+      '<p class="lead">打通预备—课堂—延伸三阶段数据：平行坐标看个体演变轨迹，学生—知识矩阵定位持续性学习困难。</p>' +
+      '<div class="kpis">' +
+      kpi('持续性困难学生', c.persistent.length + ' 人', '', c.persistent.length ? 'warn' : 'good') +
+      kpi('参与学生数', c.studentKp.rowLabels.length + ' 人', '', '') +
+      kpi('知识点数', c.studentKp.colLabels.length + ' 个', '', '') +
+      '</div></div>';
+    html += '<div class="chart-grid">';
+    html += chartBox('学生三阶段演变轨迹（平行坐标图）',
+      '预备掌握概率 → 课中互动中心度 → 延伸掌握概率 → 错因复杂度；红色为持续性困难学生',
+      CH.parallel(c.parallel.rows, c.parallel.axes, { width: 1000, height: 380 }),
+      '<b>怎么读：</b>红色线在第 1、3 轴都偏低且第 4 轴高，即"课前不会、课中不说、课后仍错"。<b>怎么做：</b>进入个别辅导名单。', true);
+    html += chartBox('学生 × 知识点 掌握概率矩阵（课后）',
+      '红色虚线框出课前课后均薄弱的交叉点（可持续切换"课后/课前"）',
+      CH.heatmap(c.studentKp.mat, c.studentKp.rowLabels, c.studentKp.colLabels,
+        { kind: 'blue', width: 1000, padL: 46, cellW: 62, cellH: 20, showValue: false }),
+      '<b>怎么读：</b>整片浅色的行＝该生系统性困难；整片浅色的列＝该知识点全班性困难。', true);
+    html += '</div>';
+    html += '<div class="card"><h3>下一课改进清单（自动生成，教师可编辑）</h3><table class="tbl compact">' +
+      '<thead><tr><th>来源</th><th>证据</th><th>下一课动作</th></tr></thead><tbody>' +
+      nextActions(r).map(function (a) {
+        return '<tr><td>' + a.src + '</td><td>' + a.ev + '</td><td><b>' + a.act + '</b></td></tr>';
+      }).join('') + '</tbody></table></div>';
+    $('compOut').innerHTML = html;
+  }
+
+  function nextActions(r) {
+    var out = [], s = r.student, t = r.teacher;
+    var weak = s.kps.slice().sort(function (a, b) { return a.classMastery - b.classMastery; }).slice(0, 2);
+    out.push({
+      src: '课程预备 · 学生画像',
+      ev: '薄弱知识点：' + weak.map(function (k) { return k.name + '（掌握概率 ' + pct(k.classMastery, 0) + '）'; }).join('、'),
+      act: '下一课开头用 5 分钟回顾，并各配 2 道诊断题'
+    });
+    var dom = s.types[0];
+    out.push({
+      src: '课程预备 · 适配度',
+      ev: '班级以' + dom.name + '为主（' + dom.size + ' 人），当前模式适配度 ' + s.fit.overall,
+      act: s.fit.overall < 60 ? '增加探究/合作环节比例，减少连续讲授时长' : '保持现有模式，为少数派类型准备分层任务'
+    });
+    if (r.inClass) {
+      var mg = r.inClass.sns.marginal;
+      out.push({
+        src: '课堂教学 · SNA',
+        ev: '边缘参与者 ' + (mg.length ? mg.join('、') : '无') + '；I/D 比 ' + r.inClass.fias.ratios.ID,
+        act: mg.length ? '把 ' + mg.slice(0, 4).join('、') + ' 列入下一课必提问名单，并安排为小组记录员' : '维持现有提问覆盖面'
+      });
+      var qt = r.inClass.fias.ext.silenceNature;
+      out.push({
+        src: '课堂教学 · FIAS',
+        ev: '沉默性质分布：思考性 ' + qt['思考性沉默'] + '、困惑性 ' + qt['困惑性沉默'] + '、混乱 ' + qt['混乱与无关'],
+        act: '困惑性沉默偏多处插入即时追问；混乱偏多处先立规矩再提问'
+      });
+    }
+    if (r.after) {
+      var down = r.after.slopes.filter(function (x) { return x.to < x.from; });
+      out.push({
+        src: '课程延伸 · 斜率图',
+        ev: down.length ? '掌握率下滑：' + down.map(function (x) { return x.label; }).join('、') : '全部知识点掌握率上升',
+        act: down.length ? '核查对应练习的表述与难度，下一课重讲并重测' : '进入下一单元，保留拓展任务'
+      });
+      var top = r.after.rules.rules[0];
+      out.push({
+        src: '课程延伸 · 关联规则',
+        ev: top ? '最强规则：错「' + top.antecedent.join('+') + '」→ 错「' + top.consequent.join('+') +
+          '」，置信度 ' + top.confidence + '，提升度 ' + top.lift : '无强关联规则',
+        act: top ? '把「' + top.antecedent.join('+') + '」作为先行补救点' : '维持现有补偿路径'
+      });
+    }
+    out.push({
+      src: '三阶段综合',
+      ev: '持续性困难学生 ' + (r.comprehensive.persistent.length ? r.comprehensive.persistent.join('、') : '无'),
+      act: '安排个别辅导，结果回流下一课画像'
+    });
+    return out;
+  }
+
+  /* ============================================================ 事件绑定 */
+  function bind() {
+    $('tabs').addEventListener('click', function (e) {
+      var b = e.target.closest('.tab'); if (!b) return;
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      $('panel-' + b.dataset.tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    $('btnRun').addEventListener('click', run);
+    $('btnReset').addEventListener('click', loadSample);
+    $('btnExport').addEventListener('click', function () {
+      if (!state.result) { toast('请先运行分析'); return; }
+      var blob = new Blob([JSON.stringify({ meta: state.result.meta, teacher: state.result.teacher, student: state.result.student, comprehensive: state.result.comprehensive }, null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'course-digital-profile.json';
+      a.click();
+      toast('已导出画像 JSON');
+    });
+    $('btnAddSeg').addEventListener('click', function () {
+      window._segData.push({ name: '新环节', minutes: 5, key: false }); renderSegTable();
+    });
+    document.querySelectorAll('[data-file]').forEach(function (b) {
+      b.addEventListener('click', function () { $('file' + b.dataset.file.slice(1)).click(); });
+    });
+    [['filePlan', 'fPlan'], ['fileItems', 'fItems'], ['fileResp', 'fResp'], ['filePost', 'fPost'],
+     ['fileInterest', 'fInterest'], ['fileConf', 'fConf']].forEach(function (p) {
+      var inp = $(p[0]);
+      if (!inp) return;
+      inp.addEventListener('change', function () {
+        var f = inp.files[0]; if (!f) return;
+        var fr = new FileReader();
+        fr.onload = function () { $(p[1]).value = fr.result; renderChecklist(); toast('已读入 ' + f.name); };
+        fr.readAsText(f, 'utf-8');
+      });
+    });
+    ['fPlan', 'fStd', 'fItems', 'fResp', 'fPost', 'fInterest', 'fConf'].forEach(function (id) {
+      $(id).addEventListener('input', function () { clearTimeout(window._cl); window._cl = setTimeout(renderChecklist, 260); });
+    });
+    document.querySelectorAll('.params input').forEach(function (i) {
+      i.addEventListener('change', function () { if (state.ready) run(); });
+    });
+  }
+
+  /* ============================================================ 启动 */
+  window.addEventListener('DOMContentLoaded', function () {
+    bind();
+    loadSample();
+    run();
+  });
+})();
+
+</script>
+</body>
+</html>
